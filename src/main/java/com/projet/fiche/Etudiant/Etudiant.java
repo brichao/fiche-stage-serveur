@@ -1,4 +1,4 @@
-package com.projet.fiche;
+package com.projet.fiche.Etudiant;
 
 
 public class Etudiant {
@@ -9,13 +9,12 @@ public class Etudiant {
     private int numPortable;
     private String mail;
     private String typeAffiliation;
-    private String inscription;
-    private String enseignant;
+    private String caisseAssurance;
 
     Etudiant(){
     }
 
-    Etudiant(int id, String nom, String prenom, int numEtudiant, int numPortable, String mail, String typeAffiliation, String inscription, String enseignant){
+    Etudiant(int id, String nom, String prenom, int numEtudiant, int numPortable, String mail, String typeAffiliation, String caisseAssurance){
         this.id=id;
         this.nom=nom;
         this.prenom=prenom;
@@ -23,8 +22,7 @@ public class Etudiant {
         this.numPortable=numPortable;
         this.mail=mail;
         this.typeAffiliation=typeAffiliation;
-        this.inscription=inscription;
-        this.enseignant=enseignant;
+        this.caisseAssurance=caisseAssurance;
     }
 
     public int getId(){
@@ -83,19 +81,11 @@ public class Etudiant {
         this.typeAffiliation=typeAffiliation;
     }
 
-    public String getInscription(){
-        return this.inscription;
+    public String getCaisseAssurance(){
+        return this.caisseAssurance;
     }
 
-    public void setInscription(String inscription){
-        this.inscription=inscription;
-    }
-
-    public String getEnseignant(){
-        return this.enseignant;
-    }
-
-    public void setEnseignant(String enseignant){
-        this.enseignant=enseignant;
+    public void setCaisseAssurance(String caisseAssurance){
+        this.caisseAssurance=caisseAssurance;
     }
 }

@@ -1,4 +1,4 @@
-package com.projet.fiche;
+package com.projet.fiche.Etudiant;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -7,6 +7,8 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 
 import javax.sql.DataSource;
+
+import com.projet.fiche.InterfaceDAO;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -33,8 +35,7 @@ public class EtudiantDAO implements InterfaceDAO<Etudiant>{
                 etudiant.setNumPortable(results.getInt("numPortable"));
                 etudiant.setMail(results.getString("mail"));
                 etudiant.setTypeAffiliation(results.getString("typeAffiliation"));
-                etudiant.setInscription(results.getString("inscription"));
-                etudiant.setEnseignant(results.getString("enseignant"));
+                etudiant.setCaisseAssurance(results.getString("caisseAssurance"));
 
                 etudiants.add(etudiant);
             }
@@ -63,8 +64,7 @@ public class EtudiantDAO implements InterfaceDAO<Etudiant>{
                 etudiant.setNumPortable(results.getInt("numPortable"));
                 etudiant.setMail(results.getString("mail"));
                 etudiant.setTypeAffiliation(results.getString("typeAffiliation"));
-                etudiant.setInscription(results.getString("inscription"));
-                etudiant.setEnseignant(results.getString("enseignant"));
+                etudiant.setCaisseAssurance(results.getString("caisseAssurance"));
             }
             results.close();
             selectStatement.close();
@@ -79,7 +79,7 @@ public class EtudiantDAO implements InterfaceDAO<Etudiant>{
     public Etudiant create(Etudiant etudiant) throws RuntimeException{
         try(Connection connection = dataSource.getConnection()){
             PreparedStatement createStatement = connection.prepareStatement("INSERT INTO Etudiants(nom,prenom,numEtudiant,numPortable," 
-            + "mail,typeAffiliation,inscription,enseignant) VALUES(?,?,?,?,?,?,?,?)");
+            + "mail,typeAffiliation,caisseAssurance) VALUES(?,?,?,?,?,?,?,?)");
 
             createStatement.setString(1, etudiant.getNom()); 
             createStatement.setString(2, etudiant.getPrenom()); 
@@ -87,8 +87,7 @@ public class EtudiantDAO implements InterfaceDAO<Etudiant>{
             createStatement.setInt(4, etudiant.getNumPortable()); 
             createStatement.setString(5, etudiant.getMail()); 
             createStatement.setString(6, etudiant.getTypeAffiliation()); 
-            createStatement.setString(7, etudiant.getInscription()); 
-            createStatement.setString(8, etudiant.getEnseignant()); 
+            createStatement.setString(7, etudiant.getCaisseAssurance()); 
 
             createStatement.executeUpdate();
             createStatement.close();
@@ -105,7 +104,7 @@ public class EtudiantDAO implements InterfaceDAO<Etudiant>{
     public Etudiant update(Etudiant etudiant) throws RuntimeException{
         try(Connection connection = dataSource.getConnection()){
             PreparedStatement updateStatement = connection.prepareStatement("UPDATE Etudiants SET nom = ?, prenom = ?, numEtudiant = ?," +
-            "numPortable = ?, mail = ?, typeAffiliation = ?, inscription = ?, enseignant = ? where id = ?");
+            "numPortable = ?, mail = ?, typeAffiliation = ?, caisseAssurance = ? where id = ?");
 
             updateStatement.setString(1, etudiant.getNom()); 
             updateStatement.setString(2, etudiant.getPrenom()); 
@@ -113,8 +112,7 @@ public class EtudiantDAO implements InterfaceDAO<Etudiant>{
             updateStatement.setInt(4, etudiant.getNumPortable()); 
             updateStatement.setString(5, etudiant.getMail()); 
             updateStatement.setString(6, etudiant.getTypeAffiliation()); 
-            updateStatement.setString(7, etudiant.getInscription()); 
-            updateStatement.setString(8, etudiant.getEnseignant()); 
+            updateStatement.setString(7, etudiant.getCaisseAssurance()); 
             updateStatement.setInt(9, etudiant.getId()); 
 
             updateStatement.executeUpdate();

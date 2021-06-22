@@ -1,4 +1,4 @@
-package com.projet.fiche;
+package com.projet.fiche.Etudiant;
 
 import java.util.ArrayList;
 
@@ -67,14 +67,15 @@ public class EtudiantController {
             }
 
             //Une erreur 403 si l'etudiant existe déjà dans la BD
-            if(etudiantService.find(etudiant.getMail()) == etudiant){
+            else if(find(mail, response) == null){
+                Etudiant etudiantInsere = new Etudiant();
+                etudiantInsere = etudiantService.create(etudiant);
+                response.setStatus(200);
+                return etudiantInsere;
+            } else {
                 System.out.println("Etudiant already exists !");
                 response.setStatus(403);
                 return null;
-            } else {
-                Etudiant etudiantInsere = new Etudiant();
-                etudiantInsere = etudiantService.create(etudiant);
-                return etudiantInsere;
             }
 
         } catch (Exception e) {
@@ -88,20 +89,18 @@ public class EtudiantController {
     public Etudiant update(@PathVariable(value="etudiantMail") String mail, @RequestBody Etudiant etudiant, HttpServletResponse response){
         try {
 
-             //une erreur 412 si le mail de l'etudiant dans l'URL n'est pas le même que celui de l'etudiant dans le corp de la requête.
-            if(!mail.equals(etudiant.getMail())){
-                System.out.println("Request body not equivalent to variable path : " + mail + " != " + etudiant.getMail());
-                response.setStatus(412);
+            Etudiant etudiantExiste = new Etudiant();
+            etudiantExiste = etudiantService.find(mail);
+
+            //Erreur 404 si l'etudiant n'existe pas dans la BD
+            if(etudiantExiste.getNom() == null){
+                System.out.println("L'etudiant n'existe pas !");
+                response.setStatus(404);
                 return null;
             }
-
-            //Une erreur 403 si l'etudiant n'existe pas dans la BD
-            if(etudiantService.find(etudiant.getMail()) != etudiant){
-                System.out.println("Etudiant does not exist !");
-                response.setStatus(403);
-                return null;
-            } else {
+            else {
                 Etudiant etudiantModifie = new Etudiant();
+                etudiant.setId(etudiantExiste.getId());
                 etudiantModifie = etudiantService.update(etudiant);
                 return etudiantModifie;
             }
