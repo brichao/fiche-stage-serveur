@@ -7,15 +7,7 @@ public class Adresse {
     private String ville;
     private String pays;
 
-    Adresse(){}
-
-    Adresse(int id, String adresse, int codePostal, String ville, String pays){
-        this.id=id;
-        this.adresse=adresse;
-        this.codePostal=codePostal;
-        this.ville=ville;
-        this.pays=pays;
-    }
+    public Adresse(){}
 
     public int getId(){
         return this.id;

@@ -1,5 +1,9 @@
 package com.projet.fiche.Etablissement;
 
+import com.projet.fiche.Adresse.Adresse;
+import com.projet.fiche.ServiceGestion.ServiceGestion;
+import com.projet.fiche.ServiceGestion.ServiceGestionController;
+
 public class Etablissement {
     private int idEtablissement;
     private String raisonSociale;
@@ -8,27 +12,14 @@ public class Etablissement {
     private int numeroSiret;
     private String codeApe;
     private String domaineActivite;
-    private int effectif;
+    private int effectif;  
     private int idAdresse;
+    private Adresse adresse = new Adresse();
     private String serviceAccueil;
-    private int serviceGestion;
+    private int idServiceGestion;
+    private ServiceGestion serviceGestion = new ServiceGestion();
 
     Etablissement(){}
-
-    Etablissement(int idEtablissement, String raisonSociale, String representantLegal, String fonction, int numeroSiret, String codeApe, String domaineActivite,
-    int effectif, int idAdresse, String serviceAccueil, int serviceGestion){
-        this.idEtablissement=idEtablissement;
-        this.raisonSociale=raisonSociale;
-        this.representantLegal=representantLegal;
-        this.fonction=fonction;
-        this.numeroSiret=numeroSiret;
-        this.codeApe=codeApe;
-        this.domaineActivite=domaineActivite;
-        this.effectif=effectif;
-        this.idAdresse=idAdresse;
-        this.serviceAccueil=serviceAccueil;
-        this.serviceGestion=serviceGestion;
-    }
 
     public int getId(){
         return this.idEtablissement;
@@ -110,11 +101,27 @@ public class Etablissement {
         this.serviceAccueil=serviceAccueil;
     }
 
-    public int getServiceGestion(){
+    public int getIdServiceGestion(){
+        return this.idServiceGestion;
+    }
+
+    public void setIdServiceGestion(int idServiceGestion){
+        this.idServiceGestion=idServiceGestion;
+    }
+
+    public Adresse getAdresse(){
+        return this.adresse;
+    }
+
+    public void setAdresse(Adresse adresse){
+        this.adresse=adresse;
+    }
+
+    public ServiceGestion getService(){
         return this.serviceGestion;
     }
 
-    public void setServiceGestion(int serviceGestion){
+    public void setService(ServiceGestion serviceGestion){
         this.serviceGestion=serviceGestion;
     }
 }

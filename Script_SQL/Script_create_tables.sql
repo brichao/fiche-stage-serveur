@@ -1,6 +1,8 @@
 drop table if exists Etudiants;
+drop table if exists Etablissements;
 drop table if exists Adresses;
 drop table if exists ServicesGestion;
+drop table if exists Tuteurs;
 
 create table Etudiants(
 	id SERIAL primary key,
@@ -28,4 +30,32 @@ create table ServicesGestion(
 	numeroTel int,
 	mail varchar(30),
 	adresse varchar(200)
-)
+);
+
+create table Tuteurs(
+	id SERIAL primary key,
+	nom varchar(30),
+	prenom varchar(30),
+	fonction varchar(50),
+	service varchar(50),
+	numTelephone int,
+	mail varchar(30),
+	adresse varchar(200),
+	disponibilite varchar(20)
+);
+
+create table Etablissements(
+	id SERIAL primary key,
+	raisonSociale varchar(300),
+	representantLegal varchar(200),
+	fonction varchar(200),
+	numeroSiret int,
+	codeApe varchar(50),
+	domaineActivite varchar(300),
+	effectif int,
+	idAdresse int,
+	serviceAccueil varchar(700),
+	idServiceGestion int,
+	constraint idAdresse_fk foreign key(idAdresse) references Adresses(id),
+	constraint serviceGestion_fk foreign key(idServiceGestion) references ServicesGestion(id)
+);

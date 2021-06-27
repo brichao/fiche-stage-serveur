@@ -118,7 +118,7 @@ public class AdresseController {
             Adresse adresseObject = new Adresse();
             adresseObject = adresseService.find(adresse);
 
-            //Erreur 404 si l'etudiant n'existe pas dans la BD
+            //Erreur 404 si l'adresse n'existe pas dans la BD
             if(adresseObject.getAdresse() == null){
                 System.out.println("L'adresse n'existe pas !");
                 response.setStatus(404);

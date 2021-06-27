@@ -14,17 +14,6 @@ public class Etudiant {
     Etudiant(){
     }
 
-    Etudiant(int id, String nom, String prenom, int numEtudiant, int numPortable, String mail, String typeAffiliation, String caisseAssurance){
-        this.id=id;
-        this.nom=nom;
-        this.prenom=prenom;
-        this.numEtudiant=numEtudiant;
-        this.numPortable=numPortable;
-        this.mail=mail;
-        this.typeAffiliation=typeAffiliation;
-        this.caisseAssurance=caisseAssurance;
-    }
-
     public int getId(){
         return this.id;
     }

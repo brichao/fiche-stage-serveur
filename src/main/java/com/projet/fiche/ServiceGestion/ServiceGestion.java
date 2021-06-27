@@ -8,16 +8,7 @@ public class ServiceGestion {
     private String mail;
     private String adresse;
 
-    ServiceGestion(){}
-
-    ServiceGestion(int idService, String nom, String prenom, int numeroTel, String mail, String adresse){
-        this.idService=idService;
-        this.nom=nom;
-        this.prenom=prenom;
-        this.numeroTel=numeroTel;
-        this.mail=mail;
-        this.adresse=adresse;
-    }
+    public ServiceGestion(){}
 
     public int getId(){
         return this.idService;

@@ -29,7 +29,7 @@ public class ServiceGestionDAO implements InterfaceDAO<ServiceGestion>{
 
             while(results.next()){
                 ServiceGestion service = new ServiceGestion();
-                service.setId(results.getInt("idService"));
+                service.setId(results.getInt("id"));
                 service.setNom(results.getString("nom"));
                 service.setPrenom(results.getString("prenom"));
                 service.setNumeroTel(results.getInt("numeroTel"));
@@ -57,7 +57,7 @@ public class ServiceGestionDAO implements InterfaceDAO<ServiceGestion>{
             ServiceGestion service = new ServiceGestion();
 
             while(results.next()){
-                service.setId(results.getInt("idService"));
+                service.setId(results.getInt("id"));
                 service.setNom(results.getString("nom"));
                 service.setPrenom(results.getString("prenom"));
                 service.setNumeroTel(results.getInt("numeroTel"));
