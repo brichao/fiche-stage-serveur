@@ -3,6 +3,7 @@ drop table if exists Etablissements;
 drop table if exists Adresses;
 drop table if exists ServicesGestion;
 drop table if exists Tuteurs;
+drop table if exists Stages;
 
 create table Etudiants(
 	id SERIAL primary key,
@@ -58,4 +59,25 @@ create table Etablissements(
 	idServiceGestion int,
 	constraint idAdresse_fk foreign key(idAdresse) references Adresses(id),
 	constraint serviceGestion_fk foreign key(idServiceGestion) references ServicesGestion(id)
+);
+
+create table Stages(
+	id serial primary key,
+	dateDebutPartiel Date,
+	dateFinPartiel Date,
+	dateFinPlein Date,
+	dateDebutInterruption Date,
+	dateFinInterruption Date,
+	nbHeures int,
+	gratification boolean,
+	montantGratification int,
+	versementGratification varchar(20),
+	laboratoireUGA varchar(50),
+	avantages varchar(50),
+	confidentialite boolean,
+	titre varchar(100),
+	description varchar(1500),
+	objectifs varchar(1500),
+	taches varchar(1500),
+	details varchar(1500)
 );
