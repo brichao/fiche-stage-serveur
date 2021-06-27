@@ -48,4 +48,10 @@ public class Adresse {
     public void setPays(String pays){
         this.pays=pays;
     }
+
+    @Override
+    public String toString(){
+        return "id = " + this.id + ", adresse = " + this.adresse + ", code postal = " + this.codePostal + ", ville = " + this.ville
+         + ", pays = " + this.pays;
+    }
 }

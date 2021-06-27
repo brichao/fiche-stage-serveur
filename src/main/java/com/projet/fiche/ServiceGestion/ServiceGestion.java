@@ -1,7 +1,7 @@
 package com.projet.fiche.ServiceGestion;
 
 public class ServiceGestion {
-    private int idService;
+    private int id;
     private String nom;
     private String prenom;
     private int numeroTel;
@@ -11,11 +11,11 @@ public class ServiceGestion {
     public ServiceGestion(){}
 
     public int getId(){
-        return this.idService;
+        return this.id;
     }
 
-    public void setId(int idService){
-        this.idService=idService;
+    public void setId(int id){
+        this.id=id;
     }
 
     public String getNom(){
@@ -56,5 +56,11 @@ public class ServiceGestion {
 
     public void setAdresse(String adresse){
         this.adresse=adresse;
+    }
+
+    @Override
+    public String toString(){
+        return "id = " + this.id + ", nom = " + this.nom + ", prenom = " + this.prenom + ", num tel = " + this.numeroTel
+        + ", mail = " + this.mail + ", adresse = " + this.adresse;
     }
 }

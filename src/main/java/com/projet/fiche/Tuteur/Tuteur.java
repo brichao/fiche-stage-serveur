@@ -53,11 +53,11 @@ public class Tuteur {
         this.service=service;
     }
 
-    public int getNumeroTel(){
+    public int getNumTelephone(){
         return this.numTelephone;
     }
 
-    public void setNumeroTel(int numTelephone){
+    public void setNumTelephone(int numTelephone){
         this.numTelephone=numTelephone;
     }
 

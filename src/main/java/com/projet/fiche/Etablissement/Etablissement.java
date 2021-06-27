@@ -2,10 +2,9 @@ package com.projet.fiche.Etablissement;
 
 import com.projet.fiche.Adresse.Adresse;
 import com.projet.fiche.ServiceGestion.ServiceGestion;
-import com.projet.fiche.ServiceGestion.ServiceGestionController;
 
 public class Etablissement {
-    private int idEtablissement;
+    private int id;
     private String raisonSociale;
     private String representantLegal;
     private String fonction;
@@ -22,11 +21,11 @@ public class Etablissement {
     Etablissement(){}
 
     public int getId(){
-        return this.idEtablissement;
+        return this.id;
     }
 
-    public void setId(int idEtablissement){
-        this.idEtablissement=idEtablissement;
+    public void setId(int id){
+        this.id=id;
     }
 
     public String getRaisonSociale(){
@@ -123,5 +122,13 @@ public class Etablissement {
 
     public void setService(ServiceGestion serviceGestion){
         this.serviceGestion=serviceGestion;
+    }
+
+    @Override
+    public String toString(){
+        return "Etablissement : id : " + this.id + ", raison sociale = " + this.raisonSociale + ", reprensentant = " + this.representantLegal
+        + ", fonction = " + this.fonction + ", numero siret = " + this.numeroSiret + ", code APE = " + this.codeApe + ", domaine activite = "
+        + this.domaineActivite + ", effectif = " + this.effectif + ", adresse = " + this.adresse.toString() + ", service accueil = "
+        + this.serviceAccueil + ", service gestion = " + this.serviceGestion.toString();
     }
 }

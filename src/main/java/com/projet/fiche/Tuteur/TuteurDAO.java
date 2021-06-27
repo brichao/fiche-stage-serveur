@@ -34,7 +34,7 @@ public class TuteurDAO implements InterfaceDAO<Tuteur>{
                 tuteur.setPrenom(results.getString("prenom"));
                 tuteur.setFonction(results.getString("fonction"));
                 tuteur.setService(results.getString("service"));
-                tuteur.setNumeroTel(results.getInt("numTelephone"));
+                tuteur.setNumTelephone(results.getInt("numTelephone"));
                 tuteur.setMail(results.getString("mail"));
                 tuteur.setAdresse(results.getString("adresse"));
                 tuteur.setDisponibilite(results.getString("disponibilite"));
@@ -65,7 +65,7 @@ public class TuteurDAO implements InterfaceDAO<Tuteur>{
                 tuteur.setPrenom(results.getString("prenom"));
                 tuteur.setFonction(results.getString("fonction"));
                 tuteur.setService(results.getString("service"));
-                tuteur.setNumeroTel(results.getInt("numTelephone"));
+                tuteur.setNumTelephone(results.getInt("numTelephone"));
                 tuteur.setMail(results.getString("mail"));
                 tuteur.setAdresse(results.getString("adresse"));
                 tuteur.setDisponibilite(results.getString("disponibilite"));
@@ -89,7 +89,7 @@ public class TuteurDAO implements InterfaceDAO<Tuteur>{
             createStatement.setString(2, tuteur.getPrenom());
             createStatement.setString(3, tuteur.getFonction()); 
             createStatement.setString(4, tuteur.getService());  
-            createStatement.setInt(5, tuteur.getNumeroTel()); 
+            createStatement.setInt(5, tuteur.getNumTelephone()); 
             createStatement.setString(6, tuteur.getMail());  
             createStatement.setString(7, tuteur.getAdresse());
             createStatement.setString(8, tuteur.getDisponibilite());
@@ -115,7 +115,7 @@ public class TuteurDAO implements InterfaceDAO<Tuteur>{
             updateStatement.setString(2, tuteur.getPrenom());
             updateStatement.setString(3, tuteur.getFonction()); 
             updateStatement.setString(4, tuteur.getService());  
-            updateStatement.setInt(5, tuteur.getNumeroTel()); 
+            updateStatement.setInt(5, tuteur.getNumTelephone()); 
             updateStatement.setString(6, tuteur.getMail());  
             updateStatement.setString(7, tuteur.getAdresse());
             updateStatement.setString(8, tuteur.getDisponibilite());

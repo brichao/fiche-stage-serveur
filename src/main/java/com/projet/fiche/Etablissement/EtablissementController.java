@@ -74,6 +74,7 @@ public class EtablissementController {
            //Une erreur 403 si l'etablissement existe déjà dans la BD
            else if(find(numeroSiret, response) == null){
                Etablissement etablissementInsere = new Etablissement();
+               System.out.println(etablissementObject.toString());
                etablissementInsere = etablissementService.create(etablissementObject);
                response.setStatus(200);
                return etablissementInsere;
