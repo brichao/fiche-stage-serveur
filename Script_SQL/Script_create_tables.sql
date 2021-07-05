@@ -56,9 +56,7 @@ create table Etablissements(
 	effectif int,
 	idAdresse int,
 	serviceAccueil varchar(700),
-	idServiceGestion int,
-	constraint idAdresse_fk foreign key(idAdresse) references Adresses(id),
-	constraint serviceGestion_fk foreign key(idServiceGestion) references ServicesGestion(id)
+	constraint idAdresse_fk foreign key(idAdresse) references Adresses(id)
 );
 
 create table Stages(

@@ -11,8 +11,6 @@ import javax.sql.DataSource;
 import com.projet.fiche.InterfaceDAO;
 import com.projet.fiche.Adresse.Adresse;
 import com.projet.fiche.Adresse.AdresseDAO;
-import com.projet.fiche.ServiceGestion.ServiceGestion;
-import com.projet.fiche.ServiceGestion.ServiceGestionDAO;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -26,19 +24,17 @@ public class EtablissementDAO implements InterfaceDAO<Etablissement>{
     @Autowired
     private AdresseDAO adresseDAO;
 
-    @Autowired
-    private ServiceGestionDAO serviceDAO;
-
     @Override
     public ArrayList<Etablissement> findAll() throws RuntimeException {
         try(Connection connection = dataSource.getConnection()){
             Statement statement = connection.createStatement();
+            Statement statementAdresse = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
             ResultSet results = statement.executeQuery("SELECT * FROM Etablissements");
 
             ArrayList<Etablissement> etablissements = new ArrayList<Etablissement>();
             while(results.next()){
                 Etablissement etablissement = new Etablissement();
-                etablissement.setId(results.getInt("idEtablissement"));
+                etablissement.setId(results.getInt("id"));
                 etablissement.setRaisonSociale(results.getString("raisonSociale"));
                 etablissement.setRepresentantLegal(results.getString("representantLegal"));
                 etablissement.setFonction(results.getString("fonction"));
@@ -48,11 +44,10 @@ public class EtablissementDAO implements InterfaceDAO<Etablissement>{
                 etablissement.setEffectif(results.getInt("effectif"));
                 etablissement.setIdAdresse(results.getInt("idAdresse"));
                 etablissement.setServiceAccueil(results.getString("serviceAccueil"));
-                etablissement.setIdServiceGestion(results.getInt("idServiceGestion"));
 
                 Adresse adresse = new Adresse();
                 adresse.setId(etablissement.getIdAdresse());
-                ResultSet resultsAdresse = statement.executeQuery("SELECT * FROM Adresses WHERE id = " + etablissement.getIdAdresse());
+                ResultSet resultsAdresse = statementAdresse.executeQuery("SELECT * FROM Adresses WHERE id = " + etablissement.getIdAdresse());
                 if(resultsAdresse.first()){
                     adresse.setAdresse(resultsAdresse.getString("adresse"));
                     adresse.setCodePostal(resultsAdresse.getInt("codePostal"));
@@ -60,20 +55,8 @@ public class EtablissementDAO implements InterfaceDAO<Etablissement>{
                     adresse.setPays(resultsAdresse.getString("pays"));
                 }
                 resultsAdresse.close();
+                statementAdresse.close();
                 etablissement.setAdresse(adresse);
-
-                ServiceGestion service = new ServiceGestion();
-                service.setId(etablissement.getIdServiceGestion());
-                ResultSet resultsService = statement.executeQuery("SELECT * FROM ServicesGestion WHERE id = " + etablissement.getIdServiceGestion());
-                if(resultsService.first()){
-                    service.setNom(resultsAdresse.getString("nom"));
-                    service.setPrenom(resultsAdresse.getString("prenom"));
-                    service.setNumeroTel(resultsAdresse.getInt("numeroTel"));
-                    service.setMail(resultsAdresse.getString("mail"));
-                    service.setAdresse(resultsAdresse.getString("adresse"));
-                }
-                resultsService.close();
-                etablissement.setService(service);
 
                 etablissements.add(etablissement);
             }
@@ -91,13 +74,14 @@ public class EtablissementDAO implements InterfaceDAO<Etablissement>{
     public Etablissement find(String chaineSiret) throws RuntimeException {
         try(Connection connection = dataSource.getConnection()){
             PreparedStatement selectStatement = connection.prepareStatement("SELECT * FROM Etablissements where numeroSiret = ?");
+            Statement statementAdresse = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
             int numeroSiret = Integer.parseInt(chaineSiret);
             selectStatement.setInt(1, numeroSiret);
             ResultSet results = selectStatement.executeQuery();
 
             Etablissement etablissement = new Etablissement();
             while(results.next()){
-                etablissement.setId(results.getInt("idEtablissement"));
+                etablissement.setId(results.getInt("id"));
                 etablissement.setRaisonSociale(results.getString("raisonSociale"));
                 etablissement.setRepresentantLegal(results.getString("representantLegal"));
                 etablissement.setFonction(results.getString("fonction"));
@@ -107,12 +91,11 @@ public class EtablissementDAO implements InterfaceDAO<Etablissement>{
                 etablissement.setEffectif(results.getInt("effectif"));
                 etablissement.setIdAdresse(results.getInt("idAdresse"));
                 etablissement.setServiceAccueil(results.getString("serviceAccueil"));
-                etablissement.setIdServiceGestion(results.getInt("idServiceGestion"));
 
                 Adresse adresse = new Adresse();
                 adresse.setId(etablissement.getIdAdresse());
 
-                ResultSet resultsAdresse = selectStatement.executeQuery("SELECT * FROM Adresses WHERE id = " + etablissement.getIdAdresse());
+                ResultSet resultsAdresse = statementAdresse.executeQuery("SELECT * FROM Adresses WHERE id = " + etablissement.getIdAdresse());
 
                 if(resultsAdresse.first()){
                     adresse.setAdresse(resultsAdresse.getString("adresse"));
@@ -121,23 +104,10 @@ public class EtablissementDAO implements InterfaceDAO<Etablissement>{
                     adresse.setPays(resultsAdresse.getString("pays"));
                 }
 
-                resultsAdresse.close();
+                
                 etablissement.setAdresse(adresse);
-
-                ServiceGestion service = new ServiceGestion();
-                service.setId(etablissement.getIdServiceGestion());
-                ResultSet resultsService = selectStatement.executeQuery("SELECT * FROM ServicesGestion WHERE id = " + etablissement.getIdServiceGestion());
-                if(resultsService.first()){
-                    service.setNom(resultsAdresse.getString("nom"));
-                    service.setPrenom(resultsAdresse.getString("prenom"));
-                    service.setNumeroTel(resultsAdresse.getInt("numeroTel"));
-                    service.setMail(resultsAdresse.getString("mail"));
-                    service.setAdresse(resultsAdresse.getString("adresse"));
-                }
-                resultsService.close();
-                etablissement.setService(service);
             }
-
+            statementAdresse.close();
             results.close();
             selectStatement.close();
             return etablissement;
@@ -154,12 +124,9 @@ public class EtablissementDAO implements InterfaceDAO<Etablissement>{
             Adresse adresse = new Adresse();
             adresse = adresseDAO.create(etablissement.getAdresse());
 
-            ServiceGestion service = new ServiceGestion();
-            service = serviceDAO.create(etablissement.getService());
-
             PreparedStatement createStatement = connection.prepareStatement("INSERT INTO Etablissements(raisonSociale,representantLegal,"
-            + "fonction,numeroSiret,codeApe,domaineActivite,effectif,idAdresse,serviceAccueil,idServiceGestion)" 
-            + "VALUES(?,?,?,?,?,?,?,?,?,?)");
+            + "fonction,numeroSiret,codeApe,domaineActivite,effectif,idAdresse,serviceAccueil)" 
+            + "VALUES(?,?,?,?,?,?,?,?,?)");
 
             createStatement.setString(1, etablissement.getRaisonSociale()); 
             createStatement.setString(2, etablissement.getRepresentantLegal()); 
@@ -170,7 +137,6 @@ public class EtablissementDAO implements InterfaceDAO<Etablissement>{
             createStatement.setInt(7, etablissement.getEffectif());
             createStatement.setInt(8, adresse.getId());
             createStatement.setString(9, etablissement.getServiceAccueil());
-            createStatement.setInt(10, service.getId()); 
 
             createStatement.executeUpdate();
             createStatement.close();
@@ -188,11 +154,10 @@ public class EtablissementDAO implements InterfaceDAO<Etablissement>{
         try(Connection connection = dataSource.getConnection()){
 
             adresseDAO.update(etablissement.getAdresse());
-            serviceDAO.update(etablissement.getService());
 
             PreparedStatement updateStatement = connection.prepareStatement("UPDATE Etablissements SET raisonSociale = ?, representantLegal = ?,"
             +" fonction = ?, numeroSiret = ?, codeApe = ?, domaineActivite = ?, effectif = ?, serviceAccueil = ?"
-            +" where idEtablissement = ?");
+            +" where id = ?");
 
             updateStatement.setString(1, etablissement.getRaisonSociale()); 
             updateStatement.setString(2, etablissement.getRepresentantLegal()); 
@@ -231,7 +196,6 @@ public class EtablissementDAO implements InterfaceDAO<Etablissement>{
             deleStatement.close();
 
             adresseDAO.delete(etablissement.getAdresse().getAdresse());
-            serviceDAO.delete(etablissement.getService().getMail());
             
         } catch(Exception e) {
             System.err.println(e.getMessage());

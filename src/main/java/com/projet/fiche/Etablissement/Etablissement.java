@@ -15,8 +15,6 @@ public class Etablissement {
     private int idAdresse;
     private Adresse adresse = new Adresse();
     private String serviceAccueil;
-    private int idServiceGestion;
-    private ServiceGestion serviceGestion = new ServiceGestion();
 
     Etablissement(){}
 
@@ -100,14 +98,6 @@ public class Etablissement {
         this.serviceAccueil=serviceAccueil;
     }
 
-    public int getIdServiceGestion(){
-        return this.idServiceGestion;
-    }
-
-    public void setIdServiceGestion(int idServiceGestion){
-        this.idServiceGestion=idServiceGestion;
-    }
-
     public Adresse getAdresse(){
         return this.adresse;
     }
@@ -116,19 +106,11 @@ public class Etablissement {
         this.adresse=adresse;
     }
 
-    public ServiceGestion getService(){
-        return this.serviceGestion;
-    }
-
-    public void setService(ServiceGestion serviceGestion){
-        this.serviceGestion=serviceGestion;
-    }
-
     @Override
     public String toString(){
         return "Etablissement : id : " + this.id + ", raison sociale = " + this.raisonSociale + ", reprensentant = " + this.representantLegal
         + ", fonction = " + this.fonction + ", numero siret = " + this.numeroSiret + ", code APE = " + this.codeApe + ", domaine activite = "
         + this.domaineActivite + ", effectif = " + this.effectif + ", adresse = " + this.adresse.toString() + ", service accueil = "
-        + this.serviceAccueil + ", service gestion = " + this.serviceGestion.toString();
+        + this.serviceAccueil;
     }
 }
