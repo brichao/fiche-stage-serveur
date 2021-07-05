@@ -8,6 +8,7 @@ public class Etudiant {
     private int numEtudiant;
     private int numPortable;
     private String mail;
+    private String adresse;
     private String typeAffiliation;
     private String caisseAssurance;
 
@@ -76,5 +77,13 @@ public class Etudiant {
 
     public void setCaisseAssurance(String caisseAssurance){
         this.caisseAssurance=caisseAssurance;
+    }
+
+    public String getAdresse(){
+        return this.adresse;
+    }
+
+    public void setAdresse(String adresse){
+        this.adresse=adresse;
     }
 }

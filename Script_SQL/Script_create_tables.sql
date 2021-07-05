@@ -12,6 +12,7 @@ create table Etudiants(
 	numEtudiant int,
 	numPortable int,
 	mail varchar(40),
+	adresse varchar(200),
 	typeAffiliation varchar(10),
 	caisseAssurance varchar(10)
 );

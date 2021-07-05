@@ -34,6 +34,7 @@ public class EtudiantDAO implements InterfaceDAO<Etudiant>{
                 etudiant.setNumEtudiant(results.getInt("numEtudiant"));
                 etudiant.setNumPortable(results.getInt("numPortable"));
                 etudiant.setMail(results.getString("mail"));
+                etudiant.setAdresse(results.getString("adresse"));
                 etudiant.setTypeAffiliation(results.getString("typeAffiliation"));
                 etudiant.setCaisseAssurance(results.getString("caisseAssurance"));
 
@@ -63,6 +64,7 @@ public class EtudiantDAO implements InterfaceDAO<Etudiant>{
                 etudiant.setNumEtudiant(results.getInt("numEtudiant"));
                 etudiant.setNumPortable(results.getInt("numPortable"));
                 etudiant.setMail(results.getString("mail"));
+                etudiant.setAdresse(results.getString("adresse"));
                 etudiant.setTypeAffiliation(results.getString("typeAffiliation"));
                 etudiant.setCaisseAssurance(results.getString("caisseAssurance"));
             }
@@ -79,15 +81,16 @@ public class EtudiantDAO implements InterfaceDAO<Etudiant>{
     public Etudiant create(Etudiant etudiant) throws RuntimeException{
         try(Connection connection = dataSource.getConnection()){
             PreparedStatement createStatement = connection.prepareStatement("INSERT INTO Etudiants(nom,prenom,numEtudiant,numPortable," 
-            + "mail,typeAffiliation,caisseAssurance) VALUES(?,?,?,?,?,?,?,?)");
+            + "mail,adresse,typeAffiliation,caisseAssurance) VALUES(?,?,?,?,?,?,?,?)");
 
             createStatement.setString(1, etudiant.getNom()); 
             createStatement.setString(2, etudiant.getPrenom()); 
             createStatement.setInt(3, etudiant.getNumEtudiant()); 
             createStatement.setInt(4, etudiant.getNumPortable()); 
             createStatement.setString(5, etudiant.getMail()); 
-            createStatement.setString(6, etudiant.getTypeAffiliation()); 
-            createStatement.setString(7, etudiant.getCaisseAssurance()); 
+            createStatement.setString(6, etudiant.getAdresse());
+            createStatement.setString(7, etudiant.getTypeAffiliation()); 
+            createStatement.setString(8, etudiant.getCaisseAssurance()); 
 
             createStatement.executeUpdate();
             createStatement.close();
@@ -104,15 +107,16 @@ public class EtudiantDAO implements InterfaceDAO<Etudiant>{
     public Etudiant update(Etudiant etudiant) throws RuntimeException{
         try(Connection connection = dataSource.getConnection()){
             PreparedStatement updateStatement = connection.prepareStatement("UPDATE Etudiants SET nom = ?, prenom = ?, numEtudiant = ?," +
-            "numPortable = ?, mail = ?, typeAffiliation = ?, caisseAssurance = ? where id = ?");
+            "numPortable = ?, mail = ?, adresse = ?, typeAffiliation = ?, caisseAssurance = ? where id = ?");
 
             updateStatement.setString(1, etudiant.getNom()); 
             updateStatement.setString(2, etudiant.getPrenom()); 
             updateStatement.setInt(3, etudiant.getNumEtudiant()); 
             updateStatement.setInt(4, etudiant.getNumPortable()); 
             updateStatement.setString(5, etudiant.getMail()); 
-            updateStatement.setString(6, etudiant.getTypeAffiliation()); 
-            updateStatement.setString(7, etudiant.getCaisseAssurance()); 
+            updateStatement.setString(6, etudiant.getAdresse());
+            updateStatement.setString(7, etudiant.getTypeAffiliation()); 
+            updateStatement.setString(8, etudiant.getCaisseAssurance()); 
             updateStatement.setInt(9, etudiant.getId()); 
 
             updateStatement.executeUpdate();
