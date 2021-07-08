@@ -1,10 +1,10 @@
-package com.projet.fiche.Stage;
+package com.projet.fiche.InfosStage;
 
 import java.sql.Date;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
-public class Stage {
+public class InfosStage {
     private int id;
 	@JsonFormat(pattern = "dd-MM-yyyy")
     private Date dateDebutPartiel;
@@ -29,7 +29,7 @@ public class Stage {
     private String taches;
     private String details;
     
-    public Stage() {}
+    public InfosStage() {}
 
 	public int getId() {
 		return id;

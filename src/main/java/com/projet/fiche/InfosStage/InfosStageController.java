@@ -1,4 +1,4 @@
-package com.projet.fiche.Stage;
+package com.projet.fiche.InfosStage;
 
 import java.util.ArrayList;
 
@@ -17,14 +17,14 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @CrossOrigin
-@RequestMapping("/stages")
-public class StageController {
+@RequestMapping("/infosStages")
+public class InfosStageController {
     
     @Autowired
-    private StageDAO stageService;
+    private InfosStageDAO stageService;
 
     @GetMapping("/")
-    public ArrayList<Stage> findAll(HttpServletResponse response){
+    public ArrayList<InfosStage> findAll(HttpServletResponse response){
         try{
             return stageService.findAll();
         } catch (Exception e){
@@ -35,14 +35,14 @@ public class StageController {
     }
 
     @GetMapping("/{titreStage}")
-    public Stage find(@PathVariable(value="titreStage") String titreStage, HttpServletResponse response){
+    public InfosStage find(@PathVariable(value="titreStage") String titreStage, HttpServletResponse response){
         try{
-            Stage stage = new Stage();
+            InfosStage stage = new InfosStage();
             stage = stageService.find(titreStage);
 
             //Erreur 404 si le stage n'existe pas dans la BD
             if(stage.getTitre() == null){
-                System.out.println("Le stage n'existe pas !");
+                System.out.println("Les informations du stage n'existe pas !");
                 response.setStatus(404);
                 return null;
             } else {
@@ -56,24 +56,24 @@ public class StageController {
     }
 
     @PostMapping("/{titreStage}")
-    public Stage create(@PathVariable(value="titreStage") String titreStage, @RequestBody Stage stage, HttpServletResponse response){
+    public InfosStage create(@PathVariable(value="titreStage") String titreStage, @RequestBody InfosStage infosStage, HttpServletResponse response){
         try {
 
              //une erreur 412 si le titre du stage dans l'URL n'est pas le même que celui du stage dans le corp de la requête.
-            if(!titreStage.equals(stage.getTitre())){
-                System.out.println("Request body not equivalent to variable path : " + titreStage + " != " + stage.getTitre());
+            if(!titreStage.equals(infosStage.getTitre())){
+                System.out.println("Request body not equivalent to variable path : " + titreStage + " != " + infosStage.getTitre());
                 response.setStatus(412);
                 return null;
             }
 
             //Une erreur 403 si le stage existe déjà dans la BD
             else if(find(titreStage, response) == null){
-                Stage stageInsere = new Stage();
-                stageInsere = stageService.create(stage);
+                InfosStage stageInsere = new InfosStage();
+                stageInsere = stageService.create(infosStage);
                 response.setStatus(200);
                 return stageInsere;
             } else {
-                System.out.println("Stage already exists !");
+                System.out.println("Informations stage already exists !");
                 response.setStatus(403);
                 return null;
             }
@@ -86,22 +86,22 @@ public class StageController {
     }
 
     @PutMapping("/{titreStage}")
-    public Stage update(@PathVariable(value="titreStage") String titreStage, @RequestBody Stage stage, HttpServletResponse response){
+    public InfosStage update(@PathVariable(value="titreStage") String titreStage, @RequestBody InfosStage infosStage, HttpServletResponse response){
         try {
 
-            Stage stageExiste = new Stage();
+            InfosStage stageExiste = new InfosStage();
             stageExiste = stageService.find(titreStage);
 
             //Erreur 404 si le stage n'existe pas dans la BD
             if(stageExiste.getTitre() == null){
-                System.out.println("Le stage n'existe pas !");
+                System.out.println("Les informatios du stage n'existe pas !");
                 response.setStatus(404);
                 return null;
             }
             else {
-                Stage stageModifie = new Stage();
-                stage.setId(stageExiste.getId());
-                stageModifie = stageService.update(stage);
+                InfosStage stageModifie = new InfosStage();
+                infosStage.setId(stageExiste.getId());
+                stageModifie = stageService.update(infosStage);
                 return stageModifie;
             }
 
@@ -115,12 +115,12 @@ public class StageController {
     @DeleteMapping("/{titreStage}")
     public void delete(@PathVariable(value="titreStage") String titreStage, HttpServletResponse response){
         try {
-            Stage stage = new Stage();
+            InfosStage stage = new InfosStage();
             stage = stageService.find(titreStage);
 
             //Erreur 404 si le stage n'existe pas dans la BD
             if(stage.getTitre() == null){
-                System.out.println("Le stage n'existe pas !");
+                System.out.println("Les informations du stage n'existe pas !");
                 response.setStatus(404);
             } else {
                 stageService.delete(titreStage);

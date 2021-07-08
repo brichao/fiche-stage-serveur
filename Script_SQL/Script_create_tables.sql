@@ -3,7 +3,7 @@ drop table if exists Etablissements;
 drop table if exists Adresses;
 drop table if exists ServicesGestion;
 drop table if exists Tuteurs;
-drop table if exists Stages;
+drop table if exists infosStages;
 
 create table Etudiants(
 	id SERIAL primary key,
@@ -13,8 +13,8 @@ create table Etudiants(
 	numPortable int,
 	mail varchar(40),
 	adresse varchar(200),
-	typeAffiliation varchar(10),
-	caisseAssurance varchar(10)
+	typeAffiliation varchar(40),
+	caisseAssurance varchar(40)
 );
 
 create table Adresses(
@@ -30,8 +30,8 @@ create table ServicesGestion(
 	nom varchar(30),
 	prenom varchar(30),
 	numeroTel int,
-	mail varchar(30),
-	adresse varchar(200)
+	mail varchar(50),
+	adresse varchar(500)
 );
 
 create table Tuteurs(
@@ -39,18 +39,18 @@ create table Tuteurs(
 	nom varchar(30),
 	prenom varchar(30),
 	fonction varchar(50),
-	service varchar(50),
+	service varchar(100),
 	numTelephone int,
-	mail varchar(30),
-	adresse varchar(200),
+	mail varchar(50),
+	adresse varchar(400),
 	disponibilite varchar(20)
 );
 
 create table Etablissements(
 	id SERIAL primary key,
 	raisonSociale varchar(300),
-	representantLegal varchar(200),
-	fonction varchar(200),
+	representantLegal varchar(300),
+	fonction varchar(300),
 	numeroSiret int,
 	codeApe varchar(50),
 	domaineActivite varchar(300),
@@ -60,7 +60,7 @@ create table Etablissements(
 	constraint idAdresse_fk foreign key(idAdresse) references Adresses(id)
 );
 
-create table Stages(
+create table infosStages(
 	id serial primary key,
 	dateDebutPartiel Date,
 	dateFinPartiel Date,

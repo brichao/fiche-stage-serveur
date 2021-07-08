@@ -1,4 +1,4 @@
-package com.projet.fiche.Stage;
+package com.projet.fiche.InfosStage;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -14,20 +14,20 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class StageDAO implements InterfaceDAO<Stage>{
+public class InfosStageDAO implements InterfaceDAO<InfosStage>{
 
     @Autowired
     private DataSource dataSource;
 
     @Override
-    public ArrayList<Stage> findAll() throws RuntimeException {
+    public ArrayList<InfosStage> findAll() throws RuntimeException {
         try(Connection connection = dataSource.getConnection()){
             Statement statement = connection.createStatement();
-            ResultSet results = statement.executeQuery("SELECT * FROM Stages");
+            ResultSet results = statement.executeQuery("SELECT * FROM infosStages");
 
-            ArrayList<Stage> stages = new ArrayList<Stage>();
+            ArrayList<InfosStage> stages = new ArrayList<InfosStage>();
             while(results.next()){
-                Stage stage = new Stage();
+                InfosStage stage = new InfosStage();
                 stage.setId(results.getInt("id"));
                 stage.setDateDebutPartiel(results.getDate("dateDebutPartiel"));
                 stage.setDateFinPartiel(results.getDate("dateFinPartiel"));
@@ -59,13 +59,13 @@ public class StageDAO implements InterfaceDAO<Stage>{
     }
 
     @Override
-    public Stage find(String titre) throws RuntimeException {
+    public InfosStage find(String titre) throws RuntimeException {
         try(Connection connection = dataSource.getConnection()){
-            PreparedStatement selectStatement = connection.prepareStatement("SELECT * FROM Stages where titre = ?");
+            PreparedStatement selectStatement = connection.prepareStatement("SELECT * FROM infosStages where titre = ?");
             selectStatement.setString(1, titre);
             ResultSet results = selectStatement.executeQuery();
 
-            Stage stage = new Stage();
+            InfosStage stage = new InfosStage();
             while(results.next()){
                 stage.setId(results.getInt("id"));
                 stage.setDateDebutPartiel(results.getDate("dateDebutPartiel"));
@@ -96,9 +96,9 @@ public class StageDAO implements InterfaceDAO<Stage>{
     }
 
     @Override
-    public Stage create(Stage stageObject) throws RuntimeException {
+    public InfosStage create(InfosStage stageObject) throws RuntimeException {
         try(Connection connection = dataSource.getConnection()){
-            PreparedStatement createStatement = connection.prepareStatement("INSERT INTO Stages(dateDebutPartiel,dateFinPartiel,dateFinPlein," 
+            PreparedStatement createStatement = connection.prepareStatement("INSERT INTO infosStages(dateDebutPartiel,dateFinPartiel,dateFinPlein," 
             + "dateDebutInterruption,dateFinInterruption,nbHeures,gratification,montantGratification,versementGratification,laboratoireUGA,"
             + "avantages,confidentialite,titre,description,objectifs,taches,details) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
 
@@ -123,7 +123,7 @@ public class StageDAO implements InterfaceDAO<Stage>{
             createStatement.executeUpdate();
             createStatement.close();
 
-            Stage stageInsere = this.find(stageObject.getTitre());
+            InfosStage stageInsere = this.find(stageObject.getTitre());
             return stageInsere;
         } catch(Exception e) {
             System.err.println(e.getMessage());
@@ -132,9 +132,9 @@ public class StageDAO implements InterfaceDAO<Stage>{
     }
 
     @Override
-    public Stage update(Stage stageObject) throws RuntimeException {
+    public InfosStage update(InfosStage stageObject) throws RuntimeException {
         try(Connection connection = dataSource.getConnection()){
-            PreparedStatement updateStatement = connection.prepareStatement("UPDATE Stages SET dateDebutPartiel = ?, dateFinPartiel = ?," 
+            PreparedStatement updateStatement = connection.prepareStatement("UPDATE infosStages SET dateDebutPartiel = ?, dateFinPartiel = ?," 
             + "dateFinPlein = ?, dateDebutInterruption = ?, dateFinInterruption = ?, nbHeures = ?, gratification = ?, montantGratification = ?,"
             + "versementGratification = ?, laboratoireUGA = ?, avantages = ?, confidentialite = ?, titre = ?, description = ?, objectifs = ?,"
             + "taches = ?, details = ? where id = ?");
@@ -161,7 +161,7 @@ public class StageDAO implements InterfaceDAO<Stage>{
             updateStatement.executeUpdate();
             updateStatement.close();
 
-            Stage stageModifie = this.find(stageObject.getTitre());
+            InfosStage stageModifie = this.find(stageObject.getTitre());
             return stageModifie;
         } catch(Exception e) {
             System.err.println(e.getMessage());
@@ -172,7 +172,7 @@ public class StageDAO implements InterfaceDAO<Stage>{
     @Override
     public void delete(String titre) throws RuntimeException {
         try(Connection connection = dataSource.getConnection()){
-            PreparedStatement deleStatement = connection.prepareStatement("DELETE FROM Stages WHERE titre = ?");
+            PreparedStatement deleStatement = connection.prepareStatement("DELETE FROM infosStages WHERE titre = ?");
 
             deleStatement.setString(1, titre); 
 
