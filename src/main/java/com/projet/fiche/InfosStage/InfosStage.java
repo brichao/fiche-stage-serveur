@@ -11,6 +11,8 @@ public class InfosStage {
 	@JsonFormat(pattern = "dd-MM-yyyy")
     private Date dateFinPartiel;
 	@JsonFormat(pattern = "dd-MM-yyyy")
+    private Date dateDebutPlein;
+	@JsonFormat(pattern = "dd-MM-yyyy")
     private Date dateFinPlein;
 	@JsonFormat(pattern = "dd-MM-yyyy")
     private Date dateDebutInterruption;
@@ -53,6 +55,14 @@ public class InfosStage {
 
 	public void setDateFinPartiel(Date dateFinPartiel) {
 		this.dateFinPartiel = dateFinPartiel;
+	}
+
+	public Date getDateDebutPlein() {
+		return dateDebutPlein;
+	}
+
+	public void setDateDebutPlein(Date dateDebutPlein) {
+		this.dateDebutPlein = dateDebutPlein;
 	}
 
 	public Date getDateFinPlein() {

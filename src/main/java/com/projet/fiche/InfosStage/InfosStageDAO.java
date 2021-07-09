@@ -31,6 +31,7 @@ public class InfosStageDAO implements InterfaceDAO<InfosStage>{
                 stage.setId(results.getInt("id"));
                 stage.setDateDebutPartiel(results.getDate("dateDebutPartiel"));
                 stage.setDateFinPartiel(results.getDate("dateFinPartiel"));
+                stage.setDateDebutPlein(results.getDate("dateDebutPlein"));
                 stage.setDateFinPlein(results.getDate("dateFinPlein"));
                 stage.setDateDebutInterruption(results.getDate("dateDebutInterruption"));
                 stage.setDateFinInterruption(results.getDate("dateFinInterruption"));
@@ -70,6 +71,7 @@ public class InfosStageDAO implements InterfaceDAO<InfosStage>{
                 stage.setId(results.getInt("id"));
                 stage.setDateDebutPartiel(results.getDate("dateDebutPartiel"));
                 stage.setDateFinPartiel(results.getDate("dateFinPartiel"));
+                stage.setDateDebutPlein(results.getDate("dateDebutPlein"));
                 stage.setDateFinPlein(results.getDate("dateFinPlein"));
                 stage.setDateDebutInterruption(results.getDate("dateDebutInterruption"));
                 stage.setDateFinInterruption(results.getDate("dateFinInterruption"));
@@ -98,27 +100,28 @@ public class InfosStageDAO implements InterfaceDAO<InfosStage>{
     @Override
     public InfosStage create(InfosStage stageObject) throws RuntimeException {
         try(Connection connection = dataSource.getConnection()){
-            PreparedStatement createStatement = connection.prepareStatement("INSERT INTO infosStages(dateDebutPartiel,dateFinPartiel,dateFinPlein," 
-            + "dateDebutInterruption,dateFinInterruption,nbHeures,gratification,montantGratification,versementGratification,laboratoireUGA,"
-            + "avantages,confidentialite,titre,description,objectifs,taches,details) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
+            PreparedStatement createStatement = connection.prepareStatement("INSERT INTO infosStages(dateDebutPartiel,dateFinPartiel,dateDebutPlein," 
+            + "dateFinPlein,dateDebutInterruption,dateFinInterruption,nbHeures,gratification,montantGratification,versementGratification,laboratoireUGA,"
+            + "avantages,confidentialite,titre,description,objectifs,taches,details) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
 
             createStatement.setDate(1, stageObject.getDateDebutPartiel()); 
             createStatement.setDate(2, stageObject.getDateFinPartiel()); 
-            createStatement.setDate(3, stageObject.getDateFinPlein()); 
-            createStatement.setDate(4, stageObject.getDateDebutInterruption()); 
-            createStatement.setDate(5, stageObject.getDateFinInterruption()); 
-            createStatement.setInt(6, stageObject.getNbHeures()); 
-            createStatement.setBoolean(7, stageObject.isGratification()); 
-            createStatement.setInt(8, stageObject.getMontantGratification()); 
-            createStatement.setString(9, stageObject.getVersementGratification()); 
-            createStatement.setString(10, stageObject.getLaboratoireUGA()); 
-            createStatement.setString(11, stageObject.getAvantages()); 
-            createStatement.setBoolean(12, stageObject.isConfidentialite()); 
-            createStatement.setString(13, stageObject.getTitre()); 
-            createStatement.setString(14, stageObject.getDescription()); 
-            createStatement.setString(15, stageObject.getObjectifs());
-            createStatement.setString(16, stageObject.getTaches());  
-            createStatement.setString(17, stageObject.getDetails()); 
+            createStatement.setDate(3, stageObject.getDateDebutPlein()); 
+            createStatement.setDate(4, stageObject.getDateFinPlein()); 
+            createStatement.setDate(5, stageObject.getDateDebutInterruption()); 
+            createStatement.setDate(6, stageObject.getDateFinInterruption()); 
+            createStatement.setInt(7, stageObject.getNbHeures()); 
+            createStatement.setBoolean(8, stageObject.isGratification()); 
+            createStatement.setInt(9, stageObject.getMontantGratification()); 
+            createStatement.setString(10, stageObject.getVersementGratification()); 
+            createStatement.setString(11, stageObject.getLaboratoireUGA()); 
+            createStatement.setString(12, stageObject.getAvantages()); 
+            createStatement.setBoolean(13, stageObject.isConfidentialite()); 
+            createStatement.setString(14, stageObject.getTitre()); 
+            createStatement.setString(15, stageObject.getDescription()); 
+            createStatement.setString(16, stageObject.getObjectifs());
+            createStatement.setString(17, stageObject.getTaches());  
+            createStatement.setString(18, stageObject.getDetails()); 
 
             createStatement.executeUpdate();
             createStatement.close();
@@ -135,28 +138,29 @@ public class InfosStageDAO implements InterfaceDAO<InfosStage>{
     public InfosStage update(InfosStage stageObject) throws RuntimeException {
         try(Connection connection = dataSource.getConnection()){
             PreparedStatement updateStatement = connection.prepareStatement("UPDATE infosStages SET dateDebutPartiel = ?, dateFinPartiel = ?," 
-            + "dateFinPlein = ?, dateDebutInterruption = ?, dateFinInterruption = ?, nbHeures = ?, gratification = ?, montantGratification = ?,"
+            + "dateDebutPlein = ?, dateFinPlein = ?, dateDebutInterruption = ?, dateFinInterruption = ?, nbHeures = ?, gratification = ?, montantGratification = ?,"
             + "versementGratification = ?, laboratoireUGA = ?, avantages = ?, confidentialite = ?, titre = ?, description = ?, objectifs = ?,"
             + "taches = ?, details = ? where id = ?");
 
             updateStatement.setDate(1, stageObject.getDateDebutPartiel()); 
             updateStatement.setDate(2, stageObject.getDateFinPartiel()); 
-            updateStatement.setDate(3, stageObject.getDateFinPlein()); 
-            updateStatement.setDate(4, stageObject.getDateDebutInterruption()); 
-            updateStatement.setDate(5, stageObject.getDateFinInterruption()); 
-            updateStatement.setInt(6, stageObject.getNbHeures()); 
-            updateStatement.setBoolean(7, stageObject.isGratification()); 
-            updateStatement.setInt(8, stageObject.getMontantGratification()); 
-            updateStatement.setString(9, stageObject.getVersementGratification()); 
-            updateStatement.setString(10, stageObject.getLaboratoireUGA()); 
-            updateStatement.setString(11, stageObject.getAvantages()); 
-            updateStatement.setBoolean(12, stageObject.isConfidentialite()); 
-            updateStatement.setString(13, stageObject.getTitre()); 
-            updateStatement.setString(14, stageObject.getDescription()); 
-            updateStatement.setString(15, stageObject.getObjectifs());
-            updateStatement.setString(16, stageObject.getTaches());  
-            updateStatement.setString(17, stageObject.getDetails());  
-            updateStatement.setInt(18, stageObject.getId());
+            updateStatement.setDate(3, stageObject.getDateDebutPlein()); 
+            updateStatement.setDate(4, stageObject.getDateFinPlein()); 
+            updateStatement.setDate(5, stageObject.getDateDebutInterruption()); 
+            updateStatement.setDate(6, stageObject.getDateFinInterruption()); 
+            updateStatement.setInt(7, stageObject.getNbHeures()); 
+            updateStatement.setBoolean(8, stageObject.isGratification()); 
+            updateStatement.setInt(9, stageObject.getMontantGratification()); 
+            updateStatement.setString(10, stageObject.getVersementGratification()); 
+            updateStatement.setString(11, stageObject.getLaboratoireUGA()); 
+            updateStatement.setString(12, stageObject.getAvantages()); 
+            updateStatement.setBoolean(13, stageObject.isConfidentialite()); 
+            updateStatement.setString(14, stageObject.getTitre()); 
+            updateStatement.setString(15, stageObject.getDescription()); 
+            updateStatement.setString(16, stageObject.getObjectifs());
+            updateStatement.setString(17, stageObject.getTaches());  
+            updateStatement.setString(18, stageObject.getDetails()); 
+            updateStatement.setInt(19, stageObject.getId());
 
             updateStatement.executeUpdate();
             updateStatement.close();
