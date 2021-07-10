@@ -1,6 +1,7 @@
 package com.projet.fiche.Etudiant;
 
-
+//Classe java etudiant qui respecte le schéma défini dans la base de donnée, avec les getters/setters et réécriture de le méthode
+//toString() pour le bon affichage d'un objet etudiant
 public class Etudiant {
     private int id;
     private String nom;

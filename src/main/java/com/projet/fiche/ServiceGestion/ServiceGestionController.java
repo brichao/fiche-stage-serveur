@@ -15,25 +15,33 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+//controleur REST ( répondre à HTTP avec des données quelconques (pas nécessaires HTML) )
 @RestController
+//indique que le contrôleur accepte les requêtes provenant d'une source quelconque (et donc pas nécessairement le même serveur). 
 @CrossOrigin
+// Indique que les ressources HTTP qui seront déclarées dans la classe seront toutes préfixées par /services/.
 @RequestMapping("/services")
 public class ServiceGestionController {
     
+    //@Autowired permet au Framework Spring de résoudre et injecter le service qui gère les méthodes CRUD de l'objet service de gestion
     @Autowired
     private ServiceGestionDAO serviceDAO;
 
+    //Ressource HTTP préfixé par /services/ et dont la fonction est de récupérer tous les services de gestion, retourne une response de type HTTP
     @GetMapping("/")
     public ArrayList<ServiceGestion> findAll(HttpServletResponse response){
         try{
+            //Utilisation de la méthode CRUD findAll() du service DAO
             return serviceDAO.findAll();
         } catch (Exception e){
+            //En cas d'erreur, HTTP renvoie une réponse de code 500 (code 500 veut dire un problème avec le serveur)
             response.setStatus(500);
             System.err.println(e.getMessage());
             return null;
         }
     }
 
+    //Ressource HTTP préfixé par /services/mailService et dont la fonction est de récupérer un service de gestion par son adresse mail, retourne une response de type HTTP
     @GetMapping("/{serviceMail}")
     public ServiceGestion find(@PathVariable(value="serviceMail") String serviceMail, HttpServletResponse response){
         try{
@@ -55,6 +63,7 @@ public class ServiceGestionController {
         }
     }
 
+    //Ressource HTTP préfixé par /services/mailService et dont la fonction est d'envoyer une requête de création d'un service de gestion (POST), retourne une response de type HTTP
     @PostMapping("/{serviceMail}")
     public ServiceGestion create(@PathVariable(value="serviceMail") String serviceMail, @RequestBody ServiceGestion serviceObject, HttpServletResponse response){
         try {
@@ -85,6 +94,7 @@ public class ServiceGestionController {
        }
     }
 
+    //Ressource HTTP préfixé par /services/mailService et dont la fonction est d'envoyer une requête de modification d'un service de gestion (PUT), retourne une response de type HTTP
     @PutMapping("/{serviceMail}")
     public ServiceGestion update(@PathVariable(value="serviceMail") String serviceMail, @RequestBody ServiceGestion serviceObject, HttpServletResponse response){
         try {
@@ -111,6 +121,7 @@ public class ServiceGestionController {
         }
     }
 
+    //Ressource HTTP préfixé par /services/mailService et dont la fonction est d'envoyer une requête de suppression d'un service de gestion (DELETE), retourne une response de type HTTP
     @DeleteMapping("/{serviceMail}")
     public void delete(@PathVariable(value="serviceMail") String serviceMail, HttpServletResponse response){
         try {

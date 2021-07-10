@@ -15,24 +15,34 @@ import com.projet.fiche.Adresse.AdresseDAO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+//La classe DAO est un service qui implémente l'interface DAO, et qui définit les méthodes CRUD, cela assure une sécurité en plus entre le serveur
+//et la base de donnée (éviter les injections de donnée dans la BD par exemple)
 @Service
 public class EtablissementDAO implements InterfaceDAO<Etablissement>{
 
+    //@Autowired permet au Framework Spring de résoudre et injecter le Bean qui gère la connexion à la base de donnée    
     @Autowired
     private DataSource dataSource;
     
+    //@Autowired permet au Framework Spring de résoudre et injecter le service qui gère les méthodes CRUD de l'objet Adresse    
     @Autowired
     private AdresseDAO adresseDAO;
 
+    //Méthode CRUD findAll() pour récupèrer tous les tuples de la table établissement dans la BD
     @Override
     public ArrayList<Etablissement> findAll() throws RuntimeException {
+        //Récupèrer la connexion grâce au service dataSource
         try(Connection connection = dataSource.getConnection()){
             Statement statement = connection.createStatement();
             Statement statementAdresse = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+            //On créé une requête et on sélectionne tous les tuples
             ResultSet results = statement.executeQuery("SELECT * FROM Etablissements");
-
+            //Déclaration d'une liste pour stocker tous les objets étudiants
             ArrayList<Etablissement> etablissements = new ArrayList<Etablissement>();
+
+            //Tant qu'on a encore des résultats de la BD
             while(results.next()){
+                //On déclare un objet de type étudiant, peuplement de tous les attributs de cet objet, et ajout dans la liste d'objets etudiants
                 Etablissement etablissement = new Etablissement();
                 etablissement.setId(results.getInt("id"));
                 etablissement.setRaisonSociale(results.getString("raisonSociale"));
@@ -62,17 +72,19 @@ public class EtablissementDAO implements InterfaceDAO<Etablissement>{
             }
             results.close();
             statement.close();
+            //Renvoie la liste des étudiants
             return etablissements;
-
         } catch(Exception e) {
             System.err.println(e.getMessage());
             return null;
         }
     }
 
+    //Méthode CRUD find() pour récupèrer un établissement par son numéro de siret de la BD
     @Override
     public Etablissement find(String chaineSiret) throws RuntimeException {
         try(Connection connection = dataSource.getConnection()){
+            //Selection de l'établissement par son numéro de siret avec une requête SQL préparée, ensuite on définit le numéro de siret
             PreparedStatement selectStatement = connection.prepareStatement("SELECT * FROM Etablissements where numeroSiret = ?");
             Statement statementAdresse = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
             int numeroSiret = Integer.parseInt(chaineSiret);
@@ -80,6 +92,9 @@ public class EtablissementDAO implements InterfaceDAO<Etablissement>{
             ResultSet results = selectStatement.executeQuery();
 
             Etablissement etablissement = new Etablissement();
+
+            //On récupère la première ligne du résultat retourné, results.next() vaudra false ensuite. Un objet de type établissement a été déclaré, peuplé
+            //avec le résultat de la sélection SQL, ensuite retourné
             while(results.next()){
                 etablissement.setId(results.getInt("id"));
                 etablissement.setRaisonSociale(results.getString("raisonSociale"));
@@ -117,13 +132,15 @@ public class EtablissementDAO implements InterfaceDAO<Etablissement>{
         }
     }
 
+    //Méthode CRUD create() pour créer un établissement dans la BD, résultat: le tuple crée
     @Override
     public Etablissement create(Etablissement etablissement) throws RuntimeException {
+        //On récupère la connexion à la BD et on prépare une requête d'insertion
         try(Connection connection = dataSource.getConnection()){
-
+            //On utilise le service adresseDAO pour créer l'adresse de l'établissement dans la BD
             Adresse adresse = new Adresse();
             adresse = adresseDAO.create(etablissement.getAdresse());
-
+            //Définition des champs requis pour la requête d'insertion, et execution ensuite grâce à la fonction executeUpdate()
             PreparedStatement createStatement = connection.prepareStatement("INSERT INTO Etablissements(raisonSociale,representantLegal,"
             + "fonction,numeroSiret,codeApe,domaineActivite,effectif,idAdresse,serviceAccueil)" 
             + "VALUES(?,?,?,?,?,?,?,?,?)");
@@ -141,6 +158,7 @@ public class EtablissementDAO implements InterfaceDAO<Etablissement>{
             createStatement.executeUpdate();
             createStatement.close();
 
+            //On va chercher dans la BD le tuple inséré grâce à la fonction find, et on retourne l'établissement inséré
             Etablissement etablissementInsere = this.find(String.valueOf(etablissement.getNumeroSiret()));
             return etablissementInsere;
         } catch(Exception e) {
@@ -149,6 +167,8 @@ public class EtablissementDAO implements InterfaceDAO<Etablissement>{
         }
     }
 
+    //Méthode CRUD update() pour modifier un établissement et son adresse présent dans la BD. Même fonctionnement que la méthode create(), à la différence
+    //de la requête Update utilisée ici. 
     @Override
     public Etablissement update(Etablissement etablissement) throws RuntimeException {
         try(Connection connection = dataSource.getConnection()){
@@ -180,6 +200,7 @@ public class EtablissementDAO implements InterfaceDAO<Etablissement>{
         }
     }
 
+    //Méthode CRUD delete pour supprimer un étalissement de la BD par son numéro de siret
     @Override
     public void delete(String chaineSiret) throws RuntimeException {
         try(Connection connection = dataSource.getConnection()){

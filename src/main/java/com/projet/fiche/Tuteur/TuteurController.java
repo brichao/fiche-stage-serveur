@@ -15,25 +15,33 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+//controleur REST ( répondre à HTTP avec des données quelconques (pas nécessaires HTML) )
 @RestController
+//indique que le contrôleur accepte les requêtes provenant d'une source quelconque (et donc pas nécessairement le même serveur). 
 @CrossOrigin
+// Indique que les ressources HTTP qui seront déclarées dans la classe seront toutes préfixées par /tuteurs/.
 @RequestMapping("/tuteurs")
 public class TuteurController {
  
+    //@Autowired permet au Framework Spring de résoudre et injecter le service qui gère les méthodes CRUD de l'objet tuteur
     @Autowired
     private TuteurDAO tuteurService;
 
+    //Ressource HTTP préfixé par /tuteurs/ et dont la fonction est de récupérer tous les tuteurs, retourne une response de type HTTP
     @GetMapping("/")
     public ArrayList<Tuteur> findAll(HttpServletResponse response){
         try{
+            //Utilisation de la méthode CRUD findAll() du service DAO
             return tuteurService.findAll();
         } catch (Exception e){
+            //En cas d'erreur, HTTP renvoie une réponse de code 500 (code 500 veut dire un problème avec le serveur)
             response.setStatus(500);
             System.err.println(e.getMessage());
             return null;
         }
     }
 
+    //Ressource HTTP préfixé par /tuteurs/mailTuteur et dont la fonction est de récupérer un tuteur par son adresse mail, retourne une response de type HTTP
     @GetMapping("/{mailTuteur}")
     public Tuteur find(@PathVariable(value="mailTuteur") String mailTuteur, HttpServletResponse response){
         try{
@@ -55,6 +63,7 @@ public class TuteurController {
         }
     }
 
+    //Ressource HTTP préfixé par /tuteurs/mailTuteur et dont la fonction est d'envoyer une requête de création d'un tuteur (POST), retourne une response de type HTTP
     @PostMapping("/{mailTuteur}")
     public Tuteur create(@PathVariable(value="mailTuteur") String mailTuteur, @RequestBody Tuteur tuteurObject, HttpServletResponse response){
         try {
@@ -84,6 +93,7 @@ public class TuteurController {
        }
     }
 
+    //Ressource HTTP préfixé par /tuteurs/mailTuteur et dont la fonction est d'envoyer une requête de modification d'un tuteur (PUT), retourne une response de type HTTP
     @PutMapping("/{mailTuteur}")
     public Tuteur update(@PathVariable(value="mailTuteur") String mailTuteur, @RequestBody Tuteur tuteurObject, HttpServletResponse response){
         try {
@@ -110,6 +120,7 @@ public class TuteurController {
         }
     }
 
+    //Ressource HTTP préfixé par /tuteurs/mailTuteur et dont la fonction est d'envoyer une requête de suppression d'un tuteur (DELETE), retourne une response de type HTTP
     @DeleteMapping("/{mailTuteur}")
     public void delete(@PathVariable(value="mailTuteur") String mailTuteur, HttpServletResponse response){
         try {

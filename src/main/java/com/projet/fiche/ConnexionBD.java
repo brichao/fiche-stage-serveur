@@ -11,9 +11,11 @@ import org.springframework.stereotype.Service;
 @Service
 public class ConnexionBD {
 
+    //Récupérer l'url de la database du fichier .env
     @Value("${spring.datasource.url}")
     private String dbUrl;
 
+    //Mise en place d'une connexion à la BD
     @Bean
     public DataSource dataSource() throws SQLException {
         if (dbUrl == null || dbUrl.isEmpty()) {

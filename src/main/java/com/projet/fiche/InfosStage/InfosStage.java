@@ -4,8 +4,11 @@ import java.sql.Date;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
+//Classe java informations du stage qui respecte le schéma défini dans la base de donnée, avec les getters/setters et réécriture de le méthode
+//toString() pour le bon affichage d'un objet d'informations de stage
 public class InfosStage {
     private int id;
+	//Déclaration du format de la date pour respecter le type de date dans PostGreSQL
 	@JsonFormat(pattern = "dd-MM-yyyy")
     private Date dateDebutPartiel;
 	@JsonFormat(pattern = "dd-MM-yyyy")

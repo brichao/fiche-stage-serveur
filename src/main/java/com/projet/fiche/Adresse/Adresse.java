@@ -1,5 +1,7 @@
 package com.projet.fiche.Adresse;
 
+//Classe java adresse qui respecte le schéma défini dans la base de donnée, avec les getters/setters et réécriture de le méthode
+//toString() pour le bon affichage d'un objet adresse
 public class Adresse {
     private int id;
     private String adresse;

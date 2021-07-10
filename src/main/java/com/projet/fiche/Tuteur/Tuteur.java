@@ -1,5 +1,7 @@
 package com.projet.fiche.Tuteur;
 
+//Classe java Tuteur qui respecte le schéma défini dans la base de donnée, avec les getters/setters et réécriture de le méthode
+//toString() pour le bon affichage d'un objet tuteur
 public class Tuteur {
     private int idTuteur;
     private String nom;

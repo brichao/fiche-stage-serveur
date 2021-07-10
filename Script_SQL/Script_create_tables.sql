@@ -64,6 +64,7 @@ create table infosStages(
 	id serial primary key,
 	dateDebutPartiel Date,
 	dateFinPartiel Date,
+	dateDebutPlein Date,
 	dateFinPlein Date,
 	dateDebutInterruption Date,
 	dateFinInterruption Date,

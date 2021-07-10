@@ -2,6 +2,7 @@ package com.projet.fiche;
 
 import java.util.ArrayList;
 
+//Interface DAO à faire respecter pour toutes les classes DAO
 public interface InterfaceDAO<T> {
     
     ArrayList<T> findAll() throws RuntimeException;

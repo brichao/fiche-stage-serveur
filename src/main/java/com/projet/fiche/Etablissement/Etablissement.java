@@ -1,8 +1,10 @@
 package com.projet.fiche.Etablissement;
 
 import com.projet.fiche.Adresse.Adresse;
-import com.projet.fiche.ServiceGestion.ServiceGestion;
 
+//Classe java etablissement qui respecte le schéma défini dans la base de donnée, avec les getters/setters et réécriture de le méthode
+//toString() pour le bon affichage d'un objet etablissement
+//Un objet a été créé de type Adresse parce que l'adresse de l'entreprise peut ne pas être unique
 public class Etablissement {
     private int id;
     private String raisonSociale;

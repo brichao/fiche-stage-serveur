@@ -15,25 +15,33 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+//controleur REST ( répondre à HTTP avec des données quelconques (pas nécessaires HTML) )
 @RestController
+//indique que le contrôleur accepte les requêtes provenant d'une source quelconque (et donc pas nécessairement le même serveur). 
 @CrossOrigin
+// Indique que les ressources HTTP qui seront déclarées dans la classe seront toutes préfixées par /adresses/.
 @RequestMapping("/adresses")
 public class AdresseController {
     
+    //@Autowired permet au Framework Spring de résoudre et injecter le service qui gère les méthodes CRUD de l'objet adresse
     @Autowired
     private AdresseDAO adresseService;
 
+    //Ressource HTTP préfixé par /adresses/ et dont la fonction est de récupérer toutes les adresses, retourne une response de type HTTP
     @GetMapping("/")
     public ArrayList<Adresse> findAll(HttpServletResponse response){
         try{
+            //Utilisation de la méthode CRUD findAll() du service DAO
             return adresseService.findAll();
         } catch (Exception e){
+            //En cas d'erreur, HTTP renvoie une réponse de code 500 (code 500 veut dire un problème avec le serveur)
             response.setStatus(500);
             System.err.println(e.getMessage());
             return null;
         }
     }
 
+    //Ressource HTTP préfixé par /adresses/adresse et dont la fonction est de récupérer une adresse par son adresse, retourne une response de type HTTP
     @GetMapping("/{adresse}")
     public Adresse find(@PathVariable(value="adresse") String adresse, HttpServletResponse response){
         try{
@@ -55,6 +63,7 @@ public class AdresseController {
         }
     }
 
+    //Ressource HTTP préfixé par /adresses/adresse et dont la fonction est d'envoyer une requête de création d'une adresse (POST), retourne une response de type HTTP
     @PostMapping("/{adresse}")
     public Adresse create(@PathVariable(value="adresse") String adresse, @RequestBody Adresse adresseObject, HttpServletResponse response){
         try {
@@ -85,7 +94,7 @@ public class AdresseController {
        }
     }
 
-
+//Ressource HTTP préfixé par /adresses/adresse et dont la fonction est d'envoyer une requête de modification d'une adresse (PUT), retourne une response de type HTTP
     @PutMapping("/{adresse}")
     public Adresse update(@PathVariable(value="adresse") String adresse, @RequestBody Adresse adresseObject, HttpServletResponse response){
         try {
@@ -112,6 +121,7 @@ public class AdresseController {
         }
     }
 
+    //Ressource HTTP préfixé par /adresses/adresse et dont la fonction est d'envoyer une requête de suppression d'une adresse (DELETE), retourne une response de type HTTP
     @DeleteMapping("/{adresse}")
     public void delete(@PathVariable(value="adresse") String adresse, HttpServletResponse response){
         try {

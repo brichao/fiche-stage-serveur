@@ -13,20 +13,29 @@ import com.projet.fiche.InterfaceDAO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+//La classe DAO est un service qui implémente l'interface DAO, et qui définit les méthodes CRUD, cela assure une sécurité en plus entre le serveur
+//et la base de donnée (éviter les injections de donnée dans la BD par exemple)
 @Service
 public class InfosStageDAO implements InterfaceDAO<InfosStage>{
 
+    //@Autowired permet au Framework Spring de résoudre et injecter le Bean qui gère la connexion à la base de donnée
     @Autowired
     private DataSource dataSource;
 
+    //Méthode CRUD findAll() pour récupèrer tous les tuples de la table d'informations de stage dans la BD
     @Override
     public ArrayList<InfosStage> findAll() throws RuntimeException {
         try(Connection connection = dataSource.getConnection()){
+            //Récupèrer la connexion grâce au service dataSource
             Statement statement = connection.createStatement();
+            //On créé une requête et on sélectionne tous les tuples
             ResultSet results = statement.executeQuery("SELECT * FROM infosStages");
-
+            //Déclaration d'une liste pour stocker tous les objets d'informations de stage
             ArrayList<InfosStage> stages = new ArrayList<InfosStage>();
+
+            //Tant qu'on a encore des résultats de la BD
             while(results.next()){
+                //On déclare un objet de type infosStage, peuplement de tous les attributs de cet objet, et ajout dans la liste d'objets d'informations de stage
                 InfosStage stage = new InfosStage();
                 stage.setId(results.getInt("id"));
                 stage.setDateDebutPartiel(results.getDate("dateDebutPartiel"));
@@ -52,6 +61,7 @@ public class InfosStageDAO implements InterfaceDAO<InfosStage>{
             }
             results.close();
             statement.close();
+            //Renvoie la liste des informations de tous les stages
             return stages;
         } catch(Exception e) {
             System.err.println(e.getMessage());
@@ -59,14 +69,18 @@ public class InfosStageDAO implements InterfaceDAO<InfosStage>{
         }
     }
 
+    //Méthode CRUD find() pour récupèrer des informations d'un stage par son titre de la BD
     @Override
     public InfosStage find(String titre) throws RuntimeException {
         try(Connection connection = dataSource.getConnection()){
+            //Selection des informations du stage par son titre avec une requête SQL préparée, ensuite on définit le titre
             PreparedStatement selectStatement = connection.prepareStatement("SELECT * FROM infosStages where titre = ?");
             selectStatement.setString(1, titre);
             ResultSet results = selectStatement.executeQuery();
 
             InfosStage stage = new InfosStage();
+            //On récupère la première ligne du résultat retourné, results.next() vaudra false ensuite. Un objet de type infosStage a été déclaré, peuplé
+            //avec le résultat de la sélection SQL, ensuite retourné
             while(results.next()){
                 stage.setId(results.getInt("id"));
                 stage.setDateDebutPartiel(results.getDate("dateDebutPartiel"));
@@ -97,13 +111,16 @@ public class InfosStageDAO implements InterfaceDAO<InfosStage>{
         }
     }
 
+    //Méthode CRUD create() pour créer un tuple des informations d'un stage dans la BD, résultat: le tupe crée
     @Override
     public InfosStage create(InfosStage stageObject) throws RuntimeException {
+        //On récupère la connexion à la BD et on prépare une requête d'insertion
         try(Connection connection = dataSource.getConnection()){
             PreparedStatement createStatement = connection.prepareStatement("INSERT INTO infosStages(dateDebutPartiel,dateFinPartiel,dateDebutPlein," 
             + "dateFinPlein,dateDebutInterruption,dateFinInterruption,nbHeures,gratification,montantGratification,versementGratification,laboratoireUGA,"
             + "avantages,confidentialite,titre,description,objectifs,taches,details) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
 
+            //Définition des champs requis pour la requête d'insertion, et execution ensuite grâce à la fonction executeUpdate()
             createStatement.setDate(1, stageObject.getDateDebutPartiel()); 
             createStatement.setDate(2, stageObject.getDateFinPartiel()); 
             createStatement.setDate(3, stageObject.getDateDebutPlein()); 
@@ -126,6 +143,7 @@ public class InfosStageDAO implements InterfaceDAO<InfosStage>{
             createStatement.executeUpdate();
             createStatement.close();
 
+            //On va chercher dans la BD le tuple inséré grâce à la fonction find, et on retourne les informations de stage insérées
             InfosStage stageInsere = this.find(stageObject.getTitre());
             return stageInsere;
         } catch(Exception e) {
@@ -134,6 +152,8 @@ public class InfosStageDAO implements InterfaceDAO<InfosStage>{
         }
     }
 
+    //Méthode CRUD update() pour modifier des informations de stage présentes dans la BD. Même fonctionnement que la méthode create(), à la différence
+    //de la requête Update utilisée ici.
     @Override
     public InfosStage update(InfosStage stageObject) throws RuntimeException {
         try(Connection connection = dataSource.getConnection()){
@@ -173,6 +193,7 @@ public class InfosStageDAO implements InterfaceDAO<InfosStage>{
         }
     }
 
+    //Méthode CRUD delete pour supprimer des informations de stage de la BD par son titre
     @Override
     public void delete(String titre) throws RuntimeException {
         try(Connection connection = dataSource.getConnection()){

@@ -1,5 +1,7 @@
 package com.projet.fiche.ServiceGestion;
 
+//Classe java service de gestion qui respecte le schéma défini dans la base de donnée, avec les getters/setters et réécriture de le méthode
+//toString() pour le bon affichage d'un objet service de gestion
 public class ServiceGestion {
     private int id;
     private String nom;

@@ -13,20 +13,29 @@ import com.projet.fiche.InterfaceDAO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+//La classe DAO est un service qui implémente l'interface DAO, et qui définit les méthodes CRUD, cela assure une sécurité en plus entre le serveur
+//et la base de donnée (éviter les injections de donnée dans la BD par exemple)
 @Service
 public class EtudiantDAO implements InterfaceDAO<Etudiant>{
 
+    //@Autowired permet au Framework Spring de résoudre et injecter le Bean qui gère la connexion à la base de donnée    
     @Autowired
     private DataSource dataSource;
 
+    //Méthode CRUD findAll() pour récupèrer tous les tuples de la table étudiant dans la BD
     @Override
     public ArrayList<Etudiant> findAll() throws RuntimeException{
+        //Récupèrer la connexion grâce au service dataSource
         try(Connection connection = dataSource.getConnection()){
             Statement statement = connection.createStatement();
+            //On créé une requête et on sélectionne tous les tuples
             ResultSet results = statement.executeQuery("SELECT * FROM Etudiants");
-
+            //Déclaration d'une liste pour stocker tous les objets étudiants
             ArrayList<Etudiant> etudiants = new ArrayList<Etudiant>();
+
+            //Tant qu'on a encore des résultats de la BD
             while(results.next()){
+                //On déclare un objet de type étudiant, peuplement de tous les attributs de cet objet, et ajout dans la liste d'objets étudiants
                 Etudiant etudiant = new Etudiant();
                 etudiant.setId(results.getInt("id"));
                 etudiant.setNom(results.getString("nom"));
@@ -42,6 +51,7 @@ public class EtudiantDAO implements InterfaceDAO<Etudiant>{
             }
             results.close();
             statement.close();
+            //Renvoie la liste des étudiants
             return etudiants;
         } catch(Exception e) {
             System.err.println(e.getMessage());
@@ -49,14 +59,19 @@ public class EtudiantDAO implements InterfaceDAO<Etudiant>{
         }
     }
 
+    //Méthode CRUD find() pour récupèrer un étudiant par son adresse mail de la BD
     @Override
     public Etudiant find(String mail) throws RuntimeException{
         try(Connection connection = dataSource.getConnection()){
+            //Selection de l'étudiant par son adresse mail avec une requête SQL préparée, ensuite on définit le mail
             PreparedStatement selectStatement = connection.prepareStatement("SELECT * FROM Etudiants where mail = ?");
             selectStatement.setString(1, mail);
             ResultSet results = selectStatement.executeQuery();
 
             Etudiant etudiant = new Etudiant();
+
+            //On récupère la première ligne du résultat retourné, results.next() vaudra false ensuite. Un objet de type étudiant a été déclaré, peuplé
+            //avec le résultat de la sélection SQL, ensuite retourné
             while(results.next()){
                 etudiant.setId(results.getInt("id"));
                 etudiant.setNom(results.getString("nom"));
@@ -77,12 +92,15 @@ public class EtudiantDAO implements InterfaceDAO<Etudiant>{
         }
     }
 
+    //Méthode CRUD create() pour créer un étudiant dans la BD, résultat: le tuple crée
     @Override
     public Etudiant create(Etudiant etudiant) throws RuntimeException{
+        //On récupère la connexion à la BD et on prépare une requête d'insertion
         try(Connection connection = dataSource.getConnection()){
             PreparedStatement createStatement = connection.prepareStatement("INSERT INTO Etudiants(nom,prenom,numEtudiant,numPortable," 
             + "mail,adresse,typeAffiliation,caisseAssurance) VALUES(?,?,?,?,?,?,?,?)");
 
+            //Définition des champs requis pour la requête d'insertion, et execution ensuite grâce à la fonction executeUpdate()
             createStatement.setString(1, etudiant.getNom()); 
             createStatement.setString(2, etudiant.getPrenom()); 
             createStatement.setInt(3, etudiant.getNumEtudiant()); 
@@ -95,6 +113,7 @@ public class EtudiantDAO implements InterfaceDAO<Etudiant>{
             createStatement.executeUpdate();
             createStatement.close();
 
+            //On va chercher dans la BD le tuple inséré grâce à la fonction find, et on retourne l'étudiant inséré
             Etudiant etudiantInsere = this.find(etudiant.getMail());
             return etudiantInsere;
         } catch(Exception e) {
@@ -103,6 +122,8 @@ public class EtudiantDAO implements InterfaceDAO<Etudiant>{
         }
     }
 
+    //Méthode CRUD update() pour modifier un étudiant présent dans la BD. Même fonctionnement que la méthode create(), à la différence
+    //de la requête Update utilisée ici.  
     @Override
     public Etudiant update(Etudiant etudiant) throws RuntimeException{
         try(Connection connection = dataSource.getConnection()){
@@ -130,6 +151,7 @@ public class EtudiantDAO implements InterfaceDAO<Etudiant>{
         }
     }
 
+    //Méthode CRUD delete pour supprimer un étudiant de la BD par son mail
     @Override
     public void delete(String mail) throws RuntimeException{
         try(Connection connection = dataSource.getConnection()){

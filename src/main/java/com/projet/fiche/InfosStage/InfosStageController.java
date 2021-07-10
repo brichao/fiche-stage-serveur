@@ -15,25 +15,33 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+//controleur REST ( répondre à HTTP avec des données quelconques (pas nécessaires HTML) )
 @RestController
+//indique que le contrôleur accepte les requêtes provenant d'une source quelconque (et donc pas nécessairement le même serveur). 
 @CrossOrigin
+// Indique que les ressources HTTP qui seront déclarées dans la classe seront toutes préfixées par /infosStage/.
 @RequestMapping("/infosStages")
 public class InfosStageController {
     
+    //@Autowired permet au Framework Spring de résoudre et injecter le service qui gère les méthodes CRUD de l'objet informations de stage
     @Autowired
     private InfosStageDAO stageService;
 
+    //Ressource HTTP préfixé par /infosStage/ et dont la fonction est de récupérer toutes les informations des stages, retourne une response de type HTTP
     @GetMapping("/")
     public ArrayList<InfosStage> findAll(HttpServletResponse response){
         try{
+            //Utilisation de la méthode CRUD findAll() du service DAO
             return stageService.findAll();
         } catch (Exception e){
+            //En cas d'erreur, HTTP renvoie une réponse de code 500 (code 500 veut dire un problème avec le serveur)
             response.setStatus(500);
             System.err.println(e.getMessage());
             return null;
         }
     }
 
+    //Ressource HTTP préfixé par /infosStages/titreStage et dont la fonction est de récupérer des informations de stage par son titre, retourne une response de type HTTP
     @GetMapping("/{titreStage}")
     public InfosStage find(@PathVariable(value="titreStage") String titreStage, HttpServletResponse response){
         try{
@@ -55,6 +63,7 @@ public class InfosStageController {
         }
     }
 
+    //Ressource HTTP préfixé par /infosStages/titreStage et dont la fonction est d'envoyer une requête de création des informations d'un stage (POST), retourne une response de type HTTP
     @PostMapping("/{titreStage}")
     public InfosStage create(@PathVariable(value="titreStage") String titreStage, @RequestBody InfosStage infosStage, HttpServletResponse response){
         try {
@@ -85,6 +94,7 @@ public class InfosStageController {
         }
     }
 
+    //Ressource HTTP préfixé par /infosStages/titreStage et dont la fonction est d'envoyer une requête de modification des informations d'un stage (PUT), retourne une response de type HTTP
     @PutMapping("/{titreStage}")
     public InfosStage update(@PathVariable(value="titreStage") String titreStage, @RequestBody InfosStage infosStage, HttpServletResponse response){
         try {
@@ -112,6 +122,7 @@ public class InfosStageController {
         }
     }
 
+    //Ressource HTTP préfixé par /infosStages/titreStage et dont la fonction est d'envoyer une requête de suppression des informations d'un stage (DELETE), retourne une response de type HTTP
     @DeleteMapping("/{titreStage}")
     public void delete(@PathVariable(value="titreStage") String titreStage, HttpServletResponse response){
         try {
