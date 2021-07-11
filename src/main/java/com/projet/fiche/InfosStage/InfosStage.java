@@ -21,9 +21,9 @@ public class InfosStage {
     private Date dateDebutInterruption;
 	@JsonFormat(pattern = "dd-MM-yyyy")
     private Date dateFinInterruption;
-    private int nbHeures;
+    private double nbHeures;
     private boolean gratification;
-    private int montantGratification;
+    private double montantGratification;
     private String versementGratification;
     private String laboratoireUGA;
     private String avantages;
@@ -92,11 +92,11 @@ public class InfosStage {
 		this.dateFinInterruption = dateFinInterruption;
 	}
 
-	public int getNbHeures() {
+	public double getNbHeures() {
 		return nbHeures;
 	}
 
-	public void setNbHeures(int nbHeures) {
+	public void setNbHeures(double nbHeures) {
 		this.nbHeures = nbHeures;
 	}
 
@@ -108,11 +108,11 @@ public class InfosStage {
 		this.gratification = gratification;
 	}
 
-	public int getMontantGratification() {
+	public double getMontantGratification() {
 		return montantGratification;
 	}
 
-	public void setMontantGratification(int montantGratification) {
+	public void setMontantGratification(double montantGratification) {
 		this.montantGratification = montantGratification;
 	}
 

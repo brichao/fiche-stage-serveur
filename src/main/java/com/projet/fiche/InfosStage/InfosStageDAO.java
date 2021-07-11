@@ -44,9 +44,9 @@ public class InfosStageDAO implements InterfaceDAO<InfosStage>{
                 stage.setDateFinPlein(results.getDate("dateFinPlein"));
                 stage.setDateDebutInterruption(results.getDate("dateDebutInterruption"));
                 stage.setDateFinInterruption(results.getDate("dateFinInterruption"));
-                stage.setNbHeures(results.getInt("nbHeures"));
+                stage.setNbHeures(results.getDouble("nbHeures"));
                 stage.setGratification(results.getBoolean("gratification"));
-                stage.setMontantGratification(results.getInt("montantGratification"));
+                stage.setMontantGratification(results.getDouble("montantGratification"));
                 stage.setVersementGratification(results.getString("versementGratification"));
                 stage.setLaboratoireUGA(results.getString("laboratoireUGA"));
                 stage.setAvantages(results.getString("avantages"));
@@ -89,9 +89,9 @@ public class InfosStageDAO implements InterfaceDAO<InfosStage>{
                 stage.setDateFinPlein(results.getDate("dateFinPlein"));
                 stage.setDateDebutInterruption(results.getDate("dateDebutInterruption"));
                 stage.setDateFinInterruption(results.getDate("dateFinInterruption"));
-                stage.setNbHeures(results.getInt("nbHeures"));
+                stage.setNbHeures(results.getDouble("nbHeures"));
                 stage.setGratification(results.getBoolean("gratification"));
-                stage.setMontantGratification(results.getInt("montantGratification"));
+                stage.setMontantGratification(results.getDouble("montantGratification"));
                 stage.setVersementGratification(results.getString("versementGratification"));
                 stage.setLaboratoireUGA(results.getString("laboratoireUGA"));
                 stage.setAvantages(results.getString("avantages"));
@@ -127,9 +127,9 @@ public class InfosStageDAO implements InterfaceDAO<InfosStage>{
             createStatement.setDate(4, stageObject.getDateFinPlein()); 
             createStatement.setDate(5, stageObject.getDateDebutInterruption()); 
             createStatement.setDate(6, stageObject.getDateFinInterruption()); 
-            createStatement.setInt(7, stageObject.getNbHeures()); 
+            createStatement.setDouble(7, stageObject.getNbHeures()); 
             createStatement.setBoolean(8, stageObject.isGratification()); 
-            createStatement.setInt(9, stageObject.getMontantGratification()); 
+            createStatement.setDouble(9, stageObject.getMontantGratification()); 
             createStatement.setString(10, stageObject.getVersementGratification()); 
             createStatement.setString(11, stageObject.getLaboratoireUGA()); 
             createStatement.setString(12, stageObject.getAvantages()); 
@@ -168,9 +168,9 @@ public class InfosStageDAO implements InterfaceDAO<InfosStage>{
             updateStatement.setDate(4, stageObject.getDateFinPlein()); 
             updateStatement.setDate(5, stageObject.getDateDebutInterruption()); 
             updateStatement.setDate(6, stageObject.getDateFinInterruption()); 
-            updateStatement.setInt(7, stageObject.getNbHeures()); 
+            updateStatement.setDouble(7, stageObject.getNbHeures()); 
             updateStatement.setBoolean(8, stageObject.isGratification()); 
-            updateStatement.setInt(9, stageObject.getMontantGratification()); 
+            updateStatement.setDouble(9, stageObject.getMontantGratification()); 
             updateStatement.setString(10, stageObject.getVersementGratification()); 
             updateStatement.setString(11, stageObject.getLaboratoireUGA()); 
             updateStatement.setString(12, stageObject.getAvantages()); 
