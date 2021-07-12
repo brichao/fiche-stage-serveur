@@ -8,8 +8,6 @@ import java.util.ArrayList;
 
 import javax.sql.DataSource;
 
-import com.projet.fiche.InterfaceDAO;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
