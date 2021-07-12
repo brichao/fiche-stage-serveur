@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import javax.sql.DataSource;
 
 import com.projet.fiche.Etudiant.Etudiant;
+import com.projet.fiche.Etudiant.EtudiantDAO;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,6 +22,10 @@ public class FicheRenseignementDAO {
     //@Autowired permet au Framework Spring de résoudre et injecter le Bean qui gère la connexion à la base de donnée
     @Autowired
     private DataSource dataSource;
+
+    //@Autowired permet au Framework Spring de résoudre et injecter le service qui gère les méthodes CRUD de l'objet étudiant
+    @Autowired
+    private EtudiantDAO etudiantService;
 
     //Méthode CRUD findAll() pour récupèrer tous les tuples de la table fiches de renseignement dans la BD
     public ArrayList<FicheRenseignement> findAll() throws RuntimeException {
@@ -78,7 +83,6 @@ public class FicheRenseignementDAO {
     public FicheRenseignement find(String nom, String prenom) throws RuntimeException{
         try(Connection connection = dataSource.getConnection()){
             //Tout d'abord, on va chercher dans la table Etudiants si l'etudiant (nom et prenom) existe dans la BD
-            Statement statementEtudiant = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
             PreparedStatement etudiantStatement = connection.prepareStatement("SELECT * FROM Etudiants where nom = ? AND prenom = ?");
             etudiantStatement.setString(1, nom);
             etudiantStatement.setString(2, prenom);
@@ -91,7 +95,7 @@ public class FicheRenseignementDAO {
             PreparedStatement statement = connection.prepareStatement("SELECT * FROM ficheRenseignement where idEtudiant = ?");
             statement.setInt(1, etudiant.getId());
             ResultSet results = statement.executeQuery();
-
+            
             FicheRenseignement fiche = new FicheRenseignement();
 
             //On récupère la première ligne du résultat retourné, results.next() vaudra false ensuite. Un objet de type fiche de renseignement a été déclaré, peuplé
@@ -104,23 +108,10 @@ public class FicheRenseignementDAO {
                 fiche.setIdTuteur(results.getInt("idTuteur"));
                 fiche.setIdInfosStage(results.getInt("idInfosStage"));
 
-                Etudiant etudiantObjet = new Etudiant();
-                etudiantObjet.setId(fiche.getIdEtudiant());
-                ResultSet resultsEtudiant = statementEtudiant.executeQuery("SELECT * FROM Etudiants WHERE id = " + fiche.getIdEtudiant());
-                if(resultsEtudiant.first()){
-                    etudiantObjet.setId(resultsEtudiant.getInt("id"));
-                    etudiantObjet.setNom(resultsEtudiant.getString("nom"));
-                    etudiantObjet.setPrenom(resultsEtudiant.getString("prenom"));
-                    etudiantObjet.setNumEtudiant(resultsEtudiant.getInt("numEtudiant"));
-                    etudiantObjet.setNumPortable(resultsEtudiant.getInt("numPortable"));
-                    etudiantObjet.setMail(resultsEtudiant.getString("mail"));
-                    etudiantObjet.setAdresse(resultsEtudiant.getString("adresse"));
-                    etudiantObjet.setTypeAffiliation(resultsEtudiant.getString("typeAffiliation"));
-                    etudiantObjet.setCaisseAssurance(resultsEtudiant.getString("caisseAssurance"));
-                }
-
+                Etudiant etudiantTrouver = new Etudiant();
+                etudiantTrouver = etudiantService.find(fiche.getIdEtudiant());
                 
-                fiche.setEtudiant(etudiant);
+                fiche.setEtudiant(etudiantTrouver);
             }    
             etudiantStatement.close();
             results.close();
