@@ -1,3 +1,4 @@
+drop table if exists ficheRenseignement;
 drop table if exists Etudiants;
 drop table if exists Etablissements;
 drop table if exists Adresses;
@@ -80,4 +81,18 @@ create table infosStages(
 	objectifs varchar(1500),
 	taches varchar(1500),
 	details varchar(1500)
+);
+
+create table ficheRenseignement(
+	id serial primary key,
+	idEtudiant int,
+	idEtablissement int,
+	idServiceGestion int,
+	idTuteur int,
+	idInfosStage int,
+	constraint idEtudiant_fk foreign key(idEtudiant) references Etudiants(id),
+	constraint idEtablissement_fk foreign key(idEtablissement) references Etablissements(id),
+	constraint idServiceGestion_fk foreign key(idServiceGestion) references ServicesGestion(id),
+	constraint idTuteur_fk foreign key(idTuteur) references Tuteurs(id),
+	constraint idInfosStage_fk foreign key(idInfosStage) references infosStages(id)
 );

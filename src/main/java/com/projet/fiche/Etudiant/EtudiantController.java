@@ -40,12 +40,34 @@ public class EtudiantController {
         }
     }
 
-    //Ressource HTTP préfixé par /etudiants/mailEtudiant et dont la fonction est de récupérer un étudiant par son adresse mail, retourne une response de type HTTP
-    @GetMapping("/{etudiantMail}")
-    public Etudiant find(@PathVariable(value="etudiantMail") String mail, HttpServletResponse response){
+    //Ressource HTTP préfixé par /etudiants/id/idEtudiant et dont la fonction est de récupérer un étudiant par son id, retourne une response de type HTTP
+    @GetMapping("/id/{idEtudiant}")
+    public Etudiant find(@PathVariable(value="idEtudiant") int idEtudiant, HttpServletResponse response){
         try{
             Etudiant etudiant = new Etudiant();
-            etudiant = etudiantService.find(mail);
+            etudiant = etudiantService.find(idEtudiant);
+
+            //Erreur 404 si l'etudiant n'existe pas dans la BD
+            if(etudiant.getNom() == null){
+                System.out.println("L'etudiant n'existe pas !");
+                response.setStatus(404);
+                return null;
+            } else {
+                return etudiant;
+            }
+        } catch(Exception e){
+            response.setStatus(500);
+            System.err.println(e.getMessage());
+            return null;
+        }
+    }
+
+    //Ressource HTTP préfixé par /etudiants/mailEtudiant et dont la fonction est de récupérer un étudiant par son adresse mail, retourne une response de type HTTP
+    @GetMapping("/{etudiantMail}")
+    public Etudiant findByString(@PathVariable(value="etudiantMail") String mail, HttpServletResponse response){
+        try{
+            Etudiant etudiant = new Etudiant();
+            etudiant = etudiantService.findByString(mail);
 
             //Erreur 404 si l'etudiant n'existe pas dans la BD
             if(etudiant.getNom() == null){
@@ -75,7 +97,7 @@ public class EtudiantController {
             }
 
             //Une erreur 403 si l'etudiant existe déjà dans la BD
-            else if(find(mail, response) == null){
+            else if(findByString(mail, response) == null){
                 Etudiant etudiantInsere = new Etudiant();
                 etudiantInsere = etudiantService.create(etudiant);
                 response.setStatus(200);
@@ -92,6 +114,7 @@ public class EtudiantController {
             return null;
         }
     }
+    
 
     //Ressource HTTP préfixé par /etudiants/mailEtudiant et dont la fonction est d'envoyer une requête de modification d'un étudiant (PUT), retourne une response de type HTTP
     @PutMapping("/{etudiantMail}")
@@ -99,7 +122,7 @@ public class EtudiantController {
         try {
 
             Etudiant etudiantExiste = new Etudiant();
-            etudiantExiste = etudiantService.find(mail);
+            etudiantExiste = etudiantService.findByString(mail);
 
             //Erreur 404 si l'etudiant n'existe pas dans la BD
             if(etudiantExiste.getNom() == null){
@@ -121,19 +144,19 @@ public class EtudiantController {
         }
     }
 
-    //Ressource HTTP préfixé par /etudiants/mailEtudiant et dont la fonction est d'envoyer une requête de suppression d'un étudiant (DELETE), retourne une response de type HTTP
-    @DeleteMapping("/{etudiantMail}")
-    public void delete(@PathVariable(value="etudiantMail") String mail, HttpServletResponse response){
+    //Ressource HTTP préfixé par /etudiants/idEtudiant et dont la fonction est d'envoyer une requête de suppression d'un étudiant (DELETE), retourne une response de type HTTP
+    @DeleteMapping("/{idEtudiant}")
+    public void delete(@PathVariable(value="idEtudiant") int idEtudiant, HttpServletResponse response){
         try {
             Etudiant etudiant = new Etudiant();
-            etudiant = etudiantService.find(mail);
+            etudiant = etudiantService.find(idEtudiant);
 
             //Erreur 404 si l'etudiant n'existe pas dans la BD
             if(etudiant.getNom() == null){
                 System.out.println("L'etudiant n'existe pas !");
                 response.setStatus(404);
             } else {
-                etudiantService.delete(mail);
+                etudiantService.delete(idEtudiant);
             }
             
         } catch (Exception e){

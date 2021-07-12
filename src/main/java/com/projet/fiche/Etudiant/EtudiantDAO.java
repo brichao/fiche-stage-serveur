@@ -59,13 +59,13 @@ public class EtudiantDAO implements InterfaceDAO<Etudiant>{
         }
     }
 
-    //Méthode CRUD find() pour récupèrer un étudiant par son adresse mail de la BD
+    //Méthode CRUD find() pour récupèrer un étudiant par son id de la BD
     @Override
-    public Etudiant find(String mail) throws RuntimeException{
+    public Etudiant find(int id) throws RuntimeException{
         try(Connection connection = dataSource.getConnection()){
             //Selection de l'étudiant par son adresse mail avec une requête SQL préparée, ensuite on définit le mail
-            PreparedStatement selectStatement = connection.prepareStatement("SELECT * FROM Etudiants where mail = ?");
-            selectStatement.setString(1, mail);
+            PreparedStatement selectStatement = connection.prepareStatement("SELECT * FROM Etudiants where id = ?");
+            selectStatement.setInt(1, id);
             ResultSet results = selectStatement.executeQuery();
 
             Etudiant etudiant = new Etudiant();
@@ -113,8 +113,16 @@ public class EtudiantDAO implements InterfaceDAO<Etudiant>{
             createStatement.executeUpdate();
             createStatement.close();
 
+            PreparedStatement createStatementFiche = connection.prepareStatement("INSERT INTO ficheRenseignement(idEtudiant) VALUES (?)");
+
             //On va chercher dans la BD le tuple inséré grâce à la fonction find, et on retourne l'étudiant inséré
-            Etudiant etudiantInsere = this.find(etudiant.getMail());
+            Etudiant etudiantInsere = this.findByString(etudiant.getMail());
+
+            //Creation d'une fiche de renseignement et insertion de l'étudiant crée dedans
+            createStatementFiche.setInt(1, etudiantInsere.getId());
+            createStatementFiche.executeUpdate();
+            createStatementFiche.close();
+
             return etudiantInsere;
         } catch(Exception e) {
             System.err.println(e.getMessage());
@@ -143,7 +151,7 @@ public class EtudiantDAO implements InterfaceDAO<Etudiant>{
             updateStatement.executeUpdate();
             updateStatement.close();
 
-            Etudiant etudiantModifie = this.find(etudiant.getMail());
+            Etudiant etudiantModifie = this.find(etudiant.getId());
             return etudiantModifie;
         } catch(Exception e) {
             System.err.println(e.getMessage());
@@ -153,16 +161,48 @@ public class EtudiantDAO implements InterfaceDAO<Etudiant>{
 
     //Méthode CRUD delete pour supprimer un étudiant de la BD par son mail
     @Override
-    public void delete(String mail) throws RuntimeException{
+    public void delete(int id) throws RuntimeException{
         try(Connection connection = dataSource.getConnection()){
-            PreparedStatement deleStatement = connection.prepareStatement("DELETE FROM Etudiants WHERE mail = ?");
+            PreparedStatement deleStatement = connection.prepareStatement("DELETE FROM Etudiants WHERE id = ?");
 
-            deleStatement.setString(1, mail); 
+            deleStatement.setInt(1, id); 
 
             deleStatement.executeUpdate();
             deleStatement.close();
         } catch(Exception e) {
             System.err.println(e.getMessage());
+        }
+    }
+
+    @Override
+    public Etudiant findByString(String mail) throws RuntimeException {
+        try(Connection connection = dataSource.getConnection()){
+            //Selection de l'étudiant par son adresse mail avec une requête SQL préparée, ensuite on définit le mail
+            PreparedStatement selectStatement = connection.prepareStatement("SELECT * FROM Etudiants where mail = ?");
+            selectStatement.setString(1, mail);
+            ResultSet results = selectStatement.executeQuery();
+
+            Etudiant etudiant = new Etudiant();
+
+            //On récupère la première ligne du résultat retourné, results.next() vaudra false ensuite. Un objet de type étudiant a été déclaré, peuplé
+            //avec le résultat de la sélection SQL, ensuite retourné
+            while(results.next()){
+                etudiant.setId(results.getInt("id"));
+                etudiant.setNom(results.getString("nom"));
+                etudiant.setPrenom(results.getString("prenom"));
+                etudiant.setNumEtudiant(results.getInt("numEtudiant"));
+                etudiant.setNumPortable(results.getInt("numPortable"));
+                etudiant.setMail(results.getString("mail"));
+                etudiant.setAdresse(results.getString("adresse"));
+                etudiant.setTypeAffiliation(results.getString("typeAffiliation"));
+                etudiant.setCaisseAssurance(results.getString("caisseAssurance"));
+            }
+            results.close();
+            selectStatement.close();
+            return etudiant;
+        } catch(Exception e) {
+            System.err.println(e.getMessage());
+            return null;
         }
     }
     

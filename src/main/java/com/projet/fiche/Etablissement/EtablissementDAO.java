@@ -80,15 +80,14 @@ public class EtablissementDAO implements InterfaceDAO<Etablissement>{
         }
     }
 
-    //Méthode CRUD find() pour récupèrer un établissement par son numéro de siret de la BD
+    //Méthode CRUD find() pour récupèrer un établissement par son id de la BD
     @Override
-    public Etablissement find(String chaineSiret) throws RuntimeException {
+    public Etablissement find(int id) throws RuntimeException {
         try(Connection connection = dataSource.getConnection()){
             //Selection de l'établissement par son numéro de siret avec une requête SQL préparée, ensuite on définit le numéro de siret
-            PreparedStatement selectStatement = connection.prepareStatement("SELECT * FROM Etablissements where numeroSiret = ?");
+            PreparedStatement selectStatement = connection.prepareStatement("SELECT * FROM Etablissements where id = ?");
             Statement statementAdresse = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-            int numeroSiret = Integer.parseInt(chaineSiret);
-            selectStatement.setInt(1, numeroSiret);
+            selectStatement.setInt(1, id);
             ResultSet results = selectStatement.executeQuery();
 
             Etablissement etablissement = new Etablissement();
@@ -159,7 +158,7 @@ public class EtablissementDAO implements InterfaceDAO<Etablissement>{
             createStatement.close();
 
             //On va chercher dans la BD le tuple inséré grâce à la fonction find, et on retourne l'établissement inséré
-            Etablissement etablissementInsere = this.find(String.valueOf(etablissement.getNumeroSiret()));
+            Etablissement etablissementInsere = this.findByString(String.valueOf(etablissement.getNumeroSiret()));
             return etablissementInsere;
         } catch(Exception e) {
             System.err.println(e.getMessage());
@@ -192,7 +191,7 @@ public class EtablissementDAO implements InterfaceDAO<Etablissement>{
             updateStatement.executeUpdate();
             updateStatement.close();
 
-            Etablissement etablissementModifie = this.find(String.valueOf(etablissement.getNumeroSiret()));
+            Etablissement etablissementModifie = this.find(etablissement.getId());
             return etablissementModifie;
         } catch(Exception e) {
             System.err.println(e.getMessage());
@@ -202,16 +201,15 @@ public class EtablissementDAO implements InterfaceDAO<Etablissement>{
 
     //Méthode CRUD delete pour supprimer un étalissement de la BD par son numéro de siret
     @Override
-    public void delete(String chaineSiret) throws RuntimeException {
+    public void delete(int id) throws RuntimeException {
         try(Connection connection = dataSource.getConnection()){
 
             Etablissement etablissement = new Etablissement();
-            etablissement = this.find(chaineSiret);
+            etablissement = this.find(id);
 
-            PreparedStatement deleStatement = connection.prepareStatement("DELETE FROM Etablissements WHERE numeroSiret = ?");
+            PreparedStatement deleStatement = connection.prepareStatement("DELETE FROM Etablissements WHERE id = ?");
 
-            int numeroSiret = Integer.parseInt(chaineSiret);
-            deleStatement.setInt(1, numeroSiret);
+            deleStatement.setInt(1, id);
 
             deleStatement.executeUpdate();
             deleStatement.close();
@@ -220,6 +218,57 @@ public class EtablissementDAO implements InterfaceDAO<Etablissement>{
             
         } catch(Exception e) {
             System.err.println(e.getMessage());
+        }
+    }
+
+    @Override
+    public Etablissement findByString(String chaineSiret) throws RuntimeException {
+        try(Connection connection = dataSource.getConnection()){
+            //Selection de l'établissement par son numéro de siret avec une requête SQL préparée, ensuite on définit le numéro de siret
+            PreparedStatement selectStatement = connection.prepareStatement("SELECT * FROM Etablissements where numeroSiret = ?");
+            Statement statementAdresse = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+            int numeroSiret = Integer.parseInt(chaineSiret);
+            selectStatement.setInt(1, numeroSiret);
+            ResultSet results = selectStatement.executeQuery();
+
+            Etablissement etablissement = new Etablissement();
+
+            //On récupère la première ligne du résultat retourné, results.next() vaudra false ensuite. Un objet de type établissement a été déclaré, peuplé
+            //avec le résultat de la sélection SQL, ensuite retourné
+            while(results.next()){
+                etablissement.setId(results.getInt("id"));
+                etablissement.setRaisonSociale(results.getString("raisonSociale"));
+                etablissement.setRepresentantLegal(results.getString("representantLegal"));
+                etablissement.setFonction(results.getString("fonction"));
+                etablissement.setNumeroSiret(results.getInt("numeroSiret"));
+                etablissement.setCodeApe(results.getString("codeApe"));
+                etablissement.setDomaineActivite(results.getString("domaineActivite"));
+                etablissement.setEffectif(results.getInt("effectif"));
+                etablissement.setIdAdresse(results.getInt("idAdresse"));
+                etablissement.setServiceAccueil(results.getString("serviceAccueil"));
+
+                Adresse adresse = new Adresse();
+                adresse.setId(etablissement.getIdAdresse());
+
+                ResultSet resultsAdresse = statementAdresse.executeQuery("SELECT * FROM Adresses WHERE id = " + etablissement.getIdAdresse());
+
+                if(resultsAdresse.first()){
+                    adresse.setAdresse(resultsAdresse.getString("adresse"));
+                    adresse.setCodePostal(resultsAdresse.getInt("codePostal"));
+                    adresse.setVille(resultsAdresse.getString("ville"));
+                    adresse.setPays(resultsAdresse.getString("pays"));
+                }
+
+                
+                etablissement.setAdresse(adresse);
+            }
+            statementAdresse.close();
+            results.close();
+            selectStatement.close();
+            return etablissement;
+        } catch(Exception e) {
+            System.err.println(e.getMessage());
+            return null;
         }
     }
     

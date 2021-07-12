@@ -69,13 +69,13 @@ public class InfosStageDAO implements InterfaceDAO<InfosStage>{
         }
     }
 
-    //Méthode CRUD find() pour récupèrer des informations d'un stage par son titre de la BD
+    //Méthode CRUD find() pour récupèrer des informations d'un stage par son id de la BD
     @Override
-    public InfosStage find(String titre) throws RuntimeException {
+    public InfosStage find(int idInfos) throws RuntimeException {
         try(Connection connection = dataSource.getConnection()){
-            //Selection des informations du stage par son titre avec une requête SQL préparée, ensuite on définit le titre
-            PreparedStatement selectStatement = connection.prepareStatement("SELECT * FROM infosStages where titre = ?");
-            selectStatement.setString(1, titre);
+            //Selection des informations du stage par son id avec une requête SQL préparée, ensuite on définit l'id
+            PreparedStatement selectStatement = connection.prepareStatement("SELECT * FROM infosStages where id = ?");
+            selectStatement.setInt(1, idInfos);
             ResultSet results = selectStatement.executeQuery();
 
             InfosStage stage = new InfosStage();
@@ -144,7 +144,7 @@ public class InfosStageDAO implements InterfaceDAO<InfosStage>{
             createStatement.close();
 
             //On va chercher dans la BD le tuple inséré grâce à la fonction find, et on retourne les informations de stage insérées
-            InfosStage stageInsere = this.find(stageObject.getTitre());
+            InfosStage stageInsere = this.findByString(stageObject.getTitre());
             return stageInsere;
         } catch(Exception e) {
             System.err.println(e.getMessage());
@@ -185,7 +185,7 @@ public class InfosStageDAO implements InterfaceDAO<InfosStage>{
             updateStatement.executeUpdate();
             updateStatement.close();
 
-            InfosStage stageModifie = this.find(stageObject.getTitre());
+            InfosStage stageModifie = this.find(stageObject.getId());
             return stageModifie;
         } catch(Exception e) {
             System.err.println(e.getMessage());
@@ -193,18 +193,59 @@ public class InfosStageDAO implements InterfaceDAO<InfosStage>{
         }
     }
 
-    //Méthode CRUD delete pour supprimer des informations de stage de la BD par son titre
+    //Méthode CRUD delete pour supprimer des informations de stage de la BD par son id
     @Override
-    public void delete(String titre) throws RuntimeException {
+    public void delete(int idInfos) throws RuntimeException {
         try(Connection connection = dataSource.getConnection()){
-            PreparedStatement deleStatement = connection.prepareStatement("DELETE FROM infosStages WHERE titre = ?");
+            PreparedStatement deleStatement = connection.prepareStatement("DELETE FROM infosStages WHERE id = ?");
 
-            deleStatement.setString(1, titre); 
+            deleStatement.setInt(1, idInfos); 
 
             deleStatement.executeUpdate();
             deleStatement.close();
         } catch(Exception e) {
             System.err.println(e.getMessage());
+        }
+    }
+
+    @Override
+    public InfosStage findByString(String titre) throws RuntimeException {
+        try(Connection connection = dataSource.getConnection()){
+            //Selection des informations du stage par son titre avec une requête SQL préparée, ensuite on définit le titre
+            PreparedStatement selectStatement = connection.prepareStatement("SELECT * FROM infosStages where titre = ?");
+            selectStatement.setString(1, titre);
+            ResultSet results = selectStatement.executeQuery();
+
+            InfosStage stage = new InfosStage();
+            //On récupère la première ligne du résultat retourné, results.next() vaudra false ensuite. Un objet de type infosStage a été déclaré, peuplé
+            //avec le résultat de la sélection SQL, ensuite retourné
+            while(results.next()){
+                stage.setId(results.getInt("id"));
+                stage.setDateDebutPartiel(results.getDate("dateDebutPartiel"));
+                stage.setDateFinPartiel(results.getDate("dateFinPartiel"));
+                stage.setDateDebutPlein(results.getDate("dateDebutPlein"));
+                stage.setDateFinPlein(results.getDate("dateFinPlein"));
+                stage.setDateDebutInterruption(results.getDate("dateDebutInterruption"));
+                stage.setDateFinInterruption(results.getDate("dateFinInterruption"));
+                stage.setNbHeures(results.getDouble("nbHeures"));
+                stage.setGratification(results.getBoolean("gratification"));
+                stage.setMontantGratification(results.getDouble("montantGratification"));
+                stage.setVersementGratification(results.getString("versementGratification"));
+                stage.setLaboratoireUGA(results.getString("laboratoireUGA"));
+                stage.setAvantages(results.getString("avantages"));
+                stage.setConfidentialite(results.getBoolean("confidentialite"));
+                stage.setTitre(results.getString("titre"));
+                stage.setDescription(results.getString("description"));
+                stage.setObjectifs(results.getString("objectifs"));
+                stage.setTaches(results.getString("taches"));
+                stage.setDetails(results.getString("details"));
+            }
+            results.close();
+            selectStatement.close();
+            return stage;
+        } catch(Exception e) {
+            System.err.println(e.getMessage());
+            return null;
         }
     }
     

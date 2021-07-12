@@ -7,11 +7,13 @@ public interface InterfaceDAO<T> {
     
     ArrayList<T> findAll() throws RuntimeException;
 
-    T find(String chaine) throws RuntimeException;
+    T find(int id) throws RuntimeException;
+
+    T findByString(String str) throws RuntimeException;
 
     T create(T object) throws RuntimeException;
 
     T update(T object) throws RuntimeException;
 
-    void delete(String chaine) throws RuntimeException;
+    void delete(int id) throws RuntimeException;
 }

@@ -41,12 +41,34 @@ public class ServiceGestionController {
         }
     }
 
-    //Ressource HTTP préfixé par /services/mailService et dont la fonction est de récupérer un service de gestion par son adresse mail, retourne une response de type HTTP
-    @GetMapping("/{serviceMail}")
-    public ServiceGestion find(@PathVariable(value="serviceMail") String serviceMail, HttpServletResponse response){
+    //Ressource HTTP préfixé par /services/id/idService et dont la fonction est de récupérer un service de gestion par son id, retourne une response de type HTTP
+    @GetMapping("/id/{idService}")
+    public ServiceGestion find(@PathVariable(value="idService") int idService, HttpServletResponse response){
         try{
             ServiceGestion serviceObject = new ServiceGestion();
-            serviceObject = serviceDAO.find(serviceMail);
+            serviceObject = serviceDAO.find(idService);
+
+            //Erreur 404 si l'adresse n'existe pas dans la BD
+            if(serviceObject.getMail() == null){
+                System.out.println("L'adresse n'existe pas !");
+                response.setStatus(404);
+                return null;
+            } else {
+                return serviceObject;
+            }
+        } catch(Exception e){
+            response.setStatus(500);
+            System.err.println(e.getMessage());
+            return null;
+        }
+    }
+
+    //Ressource HTTP préfixé par /services/mailService et dont la fonction est de récupérer un service de gestion par son adresse mail, retourne une response de type HTTP
+    @GetMapping("/{serviceMail}")
+    public ServiceGestion findByString(@PathVariable(value="serviceMail") String serviceMail, HttpServletResponse response){
+        try{
+            ServiceGestion serviceObject = new ServiceGestion();
+            serviceObject = serviceDAO.findByString(serviceMail);
 
             //Erreur 404 si l'adresse n'existe pas dans la BD
             if(serviceObject.getMail() == null){
@@ -76,7 +98,7 @@ public class ServiceGestionController {
            }
 
            //Une erreur 403 si le service de gestion existe déjà dans la BD
-           else if(find(serviceMail, response) == null){
+           else if(findByString(serviceMail, response) == null){
                ServiceGestion serviceInsere = new ServiceGestion();
                serviceInsere = serviceDAO.create(serviceObject);
                response.setStatus(200);
@@ -100,7 +122,7 @@ public class ServiceGestionController {
         try {
 
             ServiceGestion serviceExiste = new ServiceGestion();
-            serviceExiste = serviceDAO.find(serviceMail);
+            serviceExiste = serviceDAO.findByString(serviceMail);
 
             //Une erreur 403 si le service de gestion n'existe pas dans la BD
             if(serviceExiste.getMail() == null){
@@ -121,19 +143,19 @@ public class ServiceGestionController {
         }
     }
 
-    //Ressource HTTP préfixé par /services/mailService et dont la fonction est d'envoyer une requête de suppression d'un service de gestion (DELETE), retourne une response de type HTTP
-    @DeleteMapping("/{serviceMail}")
-    public void delete(@PathVariable(value="serviceMail") String serviceMail, HttpServletResponse response){
+    //Ressource HTTP préfixé par /services/idService et dont la fonction est d'envoyer une requête de suppression d'un service de gestion (DELETE), retourne une response de type HTTP
+    @DeleteMapping("/{idService}")
+    public void delete(@PathVariable(value="idService") int idService, HttpServletResponse response){
         try {
             ServiceGestion serviceObject = new ServiceGestion();
-            serviceObject = serviceDAO.find(serviceMail);
+            serviceObject = serviceDAO.find(idService);
 
             //Erreur 404 si le service de gestion n'existe pas dans la BD
             if(serviceObject.getMail() == null){
                 System.out.println("Le service de gestion n'existe pas !");
                 response.setStatus(404);
             } else {
-                serviceDAO.delete(serviceMail);
+                serviceDAO.delete(idService);
             }
             
         } catch (Exception e){

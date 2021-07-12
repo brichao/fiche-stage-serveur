@@ -57,13 +57,13 @@ public class ServiceGestionDAO implements InterfaceDAO<ServiceGestion>{
         }
     }
 
-    //Méthode CRUD find() pour récupèrer un service de gestion par son adresse mail de la BD
+    //Méthode CRUD find() pour récupèrer un service de gestion par son id de la BD
     @Override
-    public ServiceGestion find(String mail) throws RuntimeException {
+    public ServiceGestion find(int id) throws RuntimeException {
         try(Connection connection = dataSource.getConnection()){
             //Selection du service de gestion par son adresse mail avec une requête SQL préparée, ensuite on définit le mail
-            PreparedStatement findStatement = connection.prepareStatement("SELECT * FROM ServicesGestion where mail = ?");
-            findStatement.setString(1, mail);
+            PreparedStatement findStatement = connection.prepareStatement("SELECT * FROM ServicesGestion where id = ?");
+            findStatement.setInt(1, id);
             ResultSet results = findStatement.executeQuery();
 
             ServiceGestion service = new ServiceGestion();
@@ -106,7 +106,7 @@ public class ServiceGestionDAO implements InterfaceDAO<ServiceGestion>{
             createStatement.close();
 
             //On va chercher dans la BD le tuple inséré grâce à la fonction find, et on retourne le service de gestion inséré
-            ServiceGestion serviceInsere = this.find(service.getMail());
+            ServiceGestion serviceInsere = this.findByString(service.getMail());
             return serviceInsere;
         } catch(Exception e) {
             System.err.println(e.getMessage());
@@ -133,7 +133,7 @@ public class ServiceGestionDAO implements InterfaceDAO<ServiceGestion>{
             updateStatement.executeUpdate();
             updateStatement.close();
 
-            ServiceGestion serviceModifie = this.find(service.getMail());
+            ServiceGestion serviceModifie = this.find(service.getId());
             return serviceModifie;
         } catch(Exception e) {
             System.err.println(e.getMessage());
@@ -141,18 +141,47 @@ public class ServiceGestionDAO implements InterfaceDAO<ServiceGestion>{
         }
     }
 
-    //Méthode CRUD delete pour supprimer un service de gestion de la BD par son mail
+    //Méthode CRUD delete pour supprimer un service de gestion de la BD par son id
     @Override
-    public void delete(String mail) throws RuntimeException {
+    public void delete(int id) throws RuntimeException {
         try(Connection connection = dataSource.getConnection()){
-            PreparedStatement deleStatement = connection.prepareStatement("DELETE FROM ServicesGestion WHERE mail = ?");
+            PreparedStatement deleStatement = connection.prepareStatement("DELETE FROM ServicesGestion WHERE id = ?");
 
-            deleStatement.setString(1, mail); 
+            deleStatement.setInt(1, id); 
 
             deleStatement.executeUpdate();
             deleStatement.close();
         } catch(Exception e) {
             System.err.println(e.getMessage());
+        }
+    }
+
+    @Override
+    public ServiceGestion findByString(String mail) throws RuntimeException {
+        try(Connection connection = dataSource.getConnection()){
+            //Selection du service de gestion par son adresse mail avec une requête SQL préparée, ensuite on définit le mail
+            PreparedStatement findStatement = connection.prepareStatement("SELECT * FROM ServicesGestion where mail = ?");
+            findStatement.setString(1, mail);
+            ResultSet results = findStatement.executeQuery();
+
+            ServiceGestion service = new ServiceGestion();
+
+            //On récupère la première ligne du résultat retourné, results.next() vaudra false ensuite. Un objet de type service de gestion a été déclaré, peuplé
+            //avec le résultat de la sélection SQL, ensuite retourné
+            while(results.next()){
+                service.setId(results.getInt("id"));
+                service.setNom(results.getString("nom"));
+                service.setPrenom(results.getString("prenom"));
+                service.setNumeroTel(results.getInt("numeroTel"));
+                service.setMail(results.getString("mail"));
+                service.setAdresse(results.getString("adresse"));
+            }
+            findStatement.close();
+            results.close();
+            return service;
+        } catch (Exception e){
+            System.err.println(e.getMessage());
+            return null;
         }
     }
     

@@ -41,12 +41,34 @@ public class TuteurController {
         }
     }
 
-    //Ressource HTTP préfixé par /tuteurs/mailTuteur et dont la fonction est de récupérer un tuteur par son adresse mail, retourne une response de type HTTP
-    @GetMapping("/{mailTuteur}")
-    public Tuteur find(@PathVariable(value="mailTuteur") String mailTuteur, HttpServletResponse response){
+    //Ressource HTTP préfixé par /tuteurs/id/idTuteur et dont la fonction est de récupérer un tuteur par son id, retourne une response de type HTTP
+    @GetMapping("/id/{idTuteur}")
+    public Tuteur find(@PathVariable(value="idTuteur") int idTuteur, HttpServletResponse response){
         try{
             Tuteur tuteurObject = new Tuteur();
-            tuteurObject = tuteurService.find(mailTuteur);
+            tuteurObject = tuteurService.find(idTuteur);
+
+            //Erreur 404 si le tuteur n'existe pas dans la BD
+            if(tuteurObject.getMail() == null){
+                System.out.println("Le tuteur n'existe pas !");
+                response.setStatus(404);
+                return null;
+            } else {
+                return tuteurObject;
+            }
+        } catch(Exception e){
+            response.setStatus(500);
+            System.err.println(e.getMessage());
+            return null;
+        }
+    }
+
+    //Ressource HTTP préfixé par /tuteurs/mailTuteur et dont la fonction est de récupérer un tuteur par son adresse mail, retourne une response de type HTTP
+    @GetMapping("/{mailTuteur}")
+    public Tuteur findByString(@PathVariable(value="mailTuteur") String mailTuteur, HttpServletResponse response){
+        try{
+            Tuteur tuteurObject = new Tuteur();
+            tuteurObject = tuteurService.findByString(mailTuteur);
 
             //Erreur 404 si le tuteur n'existe pas dans la BD
             if(tuteurObject.getMail() == null){
@@ -73,7 +95,7 @@ public class TuteurController {
                System.out.println("Request body not equivalent to variable path : " + mailTuteur + " != " + tuteurObject.getMail());
                response.setStatus(412);
                return null;
-           } else if(find(mailTuteur, response) == null){
+           } else if(findByString(mailTuteur, response) == null){
                Tuteur tuteurInsere = new Tuteur();
                tuteurInsere = tuteurService.create(tuteurObject);
                response.setStatus(200);
@@ -99,7 +121,7 @@ public class TuteurController {
         try {
 
             Tuteur tuteurExiste = new Tuteur();
-            tuteurExiste = tuteurService.find(mailTuteur);
+            tuteurExiste = tuteurService.findByString(mailTuteur);
 
             //Une erreur 403 si le tuteur n'existe pas dans la BD
             if(tuteurExiste.getMail() == null){
@@ -120,19 +142,19 @@ public class TuteurController {
         }
     }
 
-    //Ressource HTTP préfixé par /tuteurs/mailTuteur et dont la fonction est d'envoyer une requête de suppression d'un tuteur (DELETE), retourne une response de type HTTP
-    @DeleteMapping("/{mailTuteur}")
-    public void delete(@PathVariable(value="mailTuteur") String mailTuteur, HttpServletResponse response){
+    //Ressource HTTP préfixé par /tuteurs/idTuteur et dont la fonction est d'envoyer une requête de suppression d'un tuteur (DELETE), retourne une response de type HTTP
+    @DeleteMapping("/{idTuteur}")
+    public void delete(@PathVariable(value="idTuteur") int idTuteur, HttpServletResponse response){
         try {
             Tuteur tuteurObject = new Tuteur();
-            tuteurObject = tuteurService.find(mailTuteur);
+            tuteurObject = tuteurService.find(idTuteur);
 
             //Erreur 404 si le tuteur n'existe pas dans la BD
             if(tuteurObject.getMail() == null){
                 System.out.println("Le tuteur n'existe pas !");
                 response.setStatus(404);
             } else {
-                tuteurService.delete(mailTuteur);
+                tuteurService.delete(idTuteur);
             }
             
         } catch (Exception e){

@@ -13,7 +13,7 @@ public class Tuteur {
     private String adresse;
     private String disponibilite;
 
-    Tuteur(){}
+    public Tuteur(){}
 
      public int getId(){
         return this.idTuteur;

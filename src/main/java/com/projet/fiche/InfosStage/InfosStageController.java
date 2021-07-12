@@ -41,12 +41,34 @@ public class InfosStageController {
         }
     }
 
-    //Ressource HTTP préfixé par /infosStages/titreStage et dont la fonction est de récupérer des informations de stage par son titre, retourne une response de type HTTP
-    @GetMapping("/{titreStage}")
-    public InfosStage find(@PathVariable(value="titreStage") String titreStage, HttpServletResponse response){
+    //Ressource HTTP préfixé par /infosStages/id/idInfos et dont la fonction est de récupérer des informations de stage par son id, retourne une response de type HTTP
+    @GetMapping("/id/{idInfos}")
+    public InfosStage find(@PathVariable(value="idInfos") int idInfos, HttpServletResponse response){
         try{
             InfosStage stage = new InfosStage();
-            stage = stageService.find(titreStage);
+            stage = stageService.find(idInfos);
+
+            //Erreur 404 si le stage n'existe pas dans la BD
+            if(stage.getTitre() == null){
+                System.out.println("Les informations du stage n'existe pas !");
+                response.setStatus(404);
+                return null;
+            } else {
+                return stage;
+            }
+        } catch(Exception e){
+            response.setStatus(500);
+            System.err.println(e.getMessage());
+            return null;
+        }
+    }
+
+    //Ressource HTTP préfixé par /infosStages/titreStage et dont la fonction est de récupérer des informations de stage par son titre, retourne une response de type HTTP
+    @GetMapping("/{titreStage}")
+    public InfosStage findByString(@PathVariable(value="titreStage") String titreStage, HttpServletResponse response){
+        try{
+            InfosStage stage = new InfosStage();
+            stage = stageService.findByString(titreStage);
 
             //Erreur 404 si le stage n'existe pas dans la BD
             if(stage.getTitre() == null){
@@ -76,7 +98,7 @@ public class InfosStageController {
             }
 
             //Une erreur 403 si le stage existe déjà dans la BD
-            else if(find(titreStage, response) == null){
+            else if(findByString(titreStage, response) == null){
                 InfosStage stageInsere = new InfosStage();
                 stageInsere = stageService.create(infosStage);
                 response.setStatus(200);
@@ -100,7 +122,7 @@ public class InfosStageController {
         try {
 
             InfosStage stageExiste = new InfosStage();
-            stageExiste = stageService.find(titreStage);
+            stageExiste = stageService.findByString(titreStage);
 
             //Erreur 404 si le stage n'existe pas dans la BD
             if(stageExiste.getTitre() == null){
@@ -122,19 +144,19 @@ public class InfosStageController {
         }
     }
 
-    //Ressource HTTP préfixé par /infosStages/titreStage et dont la fonction est d'envoyer une requête de suppression des informations d'un stage (DELETE), retourne une response de type HTTP
-    @DeleteMapping("/{titreStage}")
-    public void delete(@PathVariable(value="titreStage") String titreStage, HttpServletResponse response){
+    //Ressource HTTP préfixé par /infosStages/idInfos et dont la fonction est d'envoyer une requête de suppression des informations d'un stage (DELETE), retourne une response de type HTTP
+    @DeleteMapping("/{idInfos}")
+    public void delete(@PathVariable(value="idInfos") int idInfos, HttpServletResponse response){
         try {
             InfosStage stage = new InfosStage();
-            stage = stageService.find(titreStage);
+            stage = stageService.find(idInfos);
 
             //Erreur 404 si le stage n'existe pas dans la BD
             if(stage.getTitre() == null){
                 System.out.println("Les informations du stage n'existe pas !");
                 response.setStatus(404);
             } else {
-                stageService.delete(titreStage);
+                stageService.delete(idInfos);
             }
             
         } catch (Exception e){

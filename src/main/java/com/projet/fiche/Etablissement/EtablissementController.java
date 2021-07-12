@@ -41,12 +41,34 @@ public class EtablissementController {
         }
     }
 
-    //Ressource HTTP préfixé par /etablissements/numeroSiretEtablissement et dont la fonction est de récupérer un établissement par son numéro de siret, retourne une response de type HTTP
-    @GetMapping("/{numeroSiret}")
-    public Etablissement find(@PathVariable(value="numeroSiret") String numeroSiret, HttpServletResponse response){
+    //Ressource HTTP préfixé par /etablissements/id/idEtablissement et dont la fonction est de récupérer un établissement par son id, retourne une response de type HTTP
+    @GetMapping("/id/{idEtablissement}")
+    public Etablissement find(@PathVariable(value="idEtablissement") int idEtablissement, HttpServletResponse response){
         try{
             Etablissement etablissementObject = new Etablissement();
-            etablissementObject = etablissementService.find(numeroSiret);
+            etablissementObject = etablissementService.find(idEtablissement);
+
+            //Erreur 404 si l'etablissement n'existe pas dans la BD
+            if(etablissementObject.getRaisonSociale() == null){
+                System.out.println("L'etablissement n'existe pas !");
+                response.setStatus(404);
+                return null;
+            } else {
+                return etablissementObject;
+            }
+        } catch (Exception e){
+            response.setStatus(500);
+            System.err.println(e.getMessage());
+            return null;
+        }
+    }
+
+    //Ressource HTTP préfixé par /etablissements/numeroSiretEtablissement et dont la fonction est de récupérer un établissement par son numéro de siret, retourne une response de type HTTP
+    @GetMapping("/{numeroSiret}")
+    public Etablissement findByString(@PathVariable(value="numeroSiret") String numeroSiret, HttpServletResponse response){
+        try{
+            Etablissement etablissementObject = new Etablissement();
+            etablissementObject = etablissementService.findByString(numeroSiret);
 
             //Erreur 404 si l'etablissement n'existe pas dans la BD
             if(etablissementObject.getRaisonSociale() == null){
@@ -76,7 +98,7 @@ public class EtablissementController {
            }
 
            //Une erreur 403 si l'etablissement existe déjà dans la BD
-           else if(find(numeroSiret, response) == null){
+           else if(findByString(numeroSiret, response) == null){
                Etablissement etablissementInsere = new Etablissement();
                System.out.println(etablissementObject.toString());
                etablissementInsere = etablissementService.create(etablissementObject);
@@ -95,46 +117,46 @@ public class EtablissementController {
        }
     }
 
-    //Ressource HTTP préfixé par /etablissements/numeroSiretEtablissement et dont la fonction est d'envoyer une requête de modification d'un établissement (PUT), retourne une response de type HTTP
-    @PutMapping("/{numeroSiret}")
-    public Etablissement update(@PathVariable(value="numeroSiret") String numeroSiret, @RequestBody Etablissement etablissementObject, HttpServletResponse response){
-        try {
+     //Ressource HTTP préfixé par /etablissements/numeroSiretEtablissement et dont la fonction est d'envoyer une requête de modification d'un établissement (PUT), retourne une response de type HTTP
+     @PutMapping("/{numeroSiret}")
+     public Etablissement update(@PathVariable(value="numeroSiret") String numeroSiret, @RequestBody Etablissement etablissementObject, HttpServletResponse response){
+         try {
+ 
+             Etablissement etablissementExiste = new Etablissement();
+             etablissementExiste = etablissementService.findByString(numeroSiret);
+ 
+             //Une erreur 403 si l'etablissement n'existe pas dans la BD
+             if(etablissementExiste.getRaisonSociale() == null){
+                 System.out.println("Etablissement does not exist !");
+                 response.setStatus(404);
+                 return null;
+             } else {
+                 Etablissement etablissementModifie = new Etablissement();
+                 etablissementObject.setId(etablissementExiste.getId());
+                 etablissementModifie = etablissementService.update(etablissementObject);
+                 return etablissementModifie;
+             }
+ 
+         } catch (Exception e) {
+             response.setStatus(500);
+             System.err.println(e.getMessage());
+             return null;
+         }
+     }
 
-            Etablissement etablissementExiste = new Etablissement();
-            etablissementExiste = etablissementService.find(numeroSiret);
-
-            //Une erreur 403 si l'etablissement n'existe pas dans la BD
-            if(etablissementExiste.getRaisonSociale() == null){
-                System.out.println("Etablissement does not exist !");
-                response.setStatus(404);
-                return null;
-            } else {
-                Etablissement etablissementModifie = new Etablissement();
-                etablissementObject.setId(etablissementExiste.getId());
-                etablissementModifie = etablissementService.update(etablissementObject);
-                return etablissementModifie;
-            }
-
-        } catch (Exception e) {
-            response.setStatus(500);
-            System.err.println(e.getMessage());
-            return null;
-        }
-    }
-
-    //Ressource HTTP préfixé par /etablissements/numeroSiretEtablissement et dont la fonction est d'envoyer une requête de suppression d'un établissement (DELETE), retourne une response de type HTTP
-    @DeleteMapping("/{numeroSiret}")
-    public void delete(@PathVariable(value="numeroSiret") String numeroSiret, HttpServletResponse response){
+    //Ressource HTTP préfixé par /etablissements/idEtablissement et dont la fonction est d'envoyer une requête de suppression d'un établissement (DELETE), retourne une response de type HTTP
+    @DeleteMapping("/{idEtablissement}")
+    public void delete(@PathVariable(value="idEtablissement") int idEtablissement, HttpServletResponse response){
         try {
             Etablissement etablissementObject = new Etablissement();
-            etablissementObject = etablissementService.find(numeroSiret);
+            etablissementObject = etablissementService.find(idEtablissement);
 
             //Erreur 404 si l'etablissement n'existe pas dans la BD
             if(etablissementObject.getRaisonSociale() == null){
                 System.out.println("L'etablissement n'existe pas !");
                 response.setStatus(404);
             } else {
-                etablissementService.delete(numeroSiret);
+                etablissementService.delete(idEtablissement);
             }
             
         } catch (Exception e){

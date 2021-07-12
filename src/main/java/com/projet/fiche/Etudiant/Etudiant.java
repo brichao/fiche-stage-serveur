@@ -13,7 +13,7 @@ public class Etudiant {
     private String typeAffiliation;
     private String caisseAssurance;
 
-    Etudiant(){
+    public Etudiant(){
     }
 
     public int getId(){

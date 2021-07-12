@@ -60,13 +60,13 @@ public class TuteurDAO implements InterfaceDAO<Tuteur>{
         }
     }
 
-    //Méthode CRUD find() pour récupèrer un tuteur par son adresse mail de la BD
+    //Méthode CRUD find() pour récupèrer un tuteur par son id de la BD
     @Override
-    public Tuteur find(String mail) throws RuntimeException {
+    public Tuteur find(int id) throws RuntimeException {
         try(Connection connection = dataSource.getConnection()){
-            //Selection du tuteur par son adresse mail avec une requête SQL préparée, ensuite on définit le mail
-            PreparedStatement findStatement = connection.prepareStatement("SELECT * FROM Tuteurs where mail = ?");
-            findStatement.setString(1, mail);
+            //Selection du tuteur par son id avec une requête SQL préparée, ensuite on définit l'id
+            PreparedStatement findStatement = connection.prepareStatement("SELECT * FROM Tuteurs where id = ?");
+            findStatement.setInt(1, id);
             ResultSet results = findStatement.executeQuery();
 
             Tuteur tuteur = new Tuteur();
@@ -115,7 +115,7 @@ public class TuteurDAO implements InterfaceDAO<Tuteur>{
             createStatement.close();
 
             //On va chercher dans la BD le tuple inséré grâce à la fonction find, et on retourne le tuteur inséré
-            Tuteur tuteurInsere = this.find(tuteur.getMail());
+            Tuteur tuteurInsere = this.findByString(tuteur.getMail());
             return tuteurInsere;
         } catch(Exception e) {
             System.err.println(e.getMessage());
@@ -144,7 +144,7 @@ public class TuteurDAO implements InterfaceDAO<Tuteur>{
             updateStatement.executeUpdate();
             updateStatement.close();
 
-            Tuteur tuteurModifie = this.find(tuteur.getMail());
+            Tuteur tuteurModifie = this.find(tuteur.getId());
             return tuteurModifie;
         } catch(Exception e) {
             System.err.println(e.getMessage());
@@ -152,18 +152,50 @@ public class TuteurDAO implements InterfaceDAO<Tuteur>{
         }
     }
 
-    //Méthode CRUD delete pour supprimer un tuteur de la BD par son mail
+    //Méthode CRUD delete pour supprimer un tuteur de la BD par son id
     @Override
-    public void delete(String mail) throws RuntimeException {
+    public void delete(int id) throws RuntimeException {
         try(Connection connection = dataSource.getConnection()){
-            PreparedStatement deleStatement = connection.prepareStatement("DELETE FROM Tuteurs WHERE mail = ?");
+            PreparedStatement deleStatement = connection.prepareStatement("DELETE FROM Tuteurs WHERE id = ?");
 
-            deleStatement.setString(1, mail); 
+            deleStatement.setInt(1, id); 
 
             deleStatement.executeUpdate();
             deleStatement.close();
         } catch(Exception e) {
             System.err.println(e.getMessage());
+        }
+    }
+
+    @Override
+    public Tuteur findByString(String mail) throws RuntimeException {
+        try(Connection connection = dataSource.getConnection()){
+            //Selection du tuteur par son adresse mail avec une requête SQL préparée, ensuite on définit le mail
+            PreparedStatement findStatement = connection.prepareStatement("SELECT * FROM Tuteurs where mail = ?");
+            findStatement.setString(1, mail);
+            ResultSet results = findStatement.executeQuery();
+
+            Tuteur tuteur = new Tuteur();
+
+            //On récupère la première ligne du résultat retourné, results.next() vaudra false ensuite. Un objet de type tuteur a été déclaré, peuplé
+            //avec le résultat de la sélection SQL, ensuite retourné
+            while(results.next()){
+                tuteur.setId(results.getInt("id"));
+                tuteur.setNom(results.getString("nom"));
+                tuteur.setPrenom(results.getString("prenom"));
+                tuteur.setFonction(results.getString("fonction"));
+                tuteur.setService(results.getString("service"));
+                tuteur.setNumTelephone(results.getInt("numTelephone"));
+                tuteur.setMail(results.getString("mail"));
+                tuteur.setAdresse(results.getString("adresse"));
+                tuteur.setDisponibilite(results.getString("disponibilite"));
+            }
+            findStatement.close();
+            results.close();
+            return tuteur;
+        } catch (Exception e){
+            System.err.println(e.getMessage());
+            return null;
         }
     }
     

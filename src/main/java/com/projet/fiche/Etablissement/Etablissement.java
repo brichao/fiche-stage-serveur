@@ -18,7 +18,7 @@ public class Etablissement {
     private Adresse adresse = new Adresse();
     private String serviceAccueil;
 
-    Etablissement(){}
+    public Etablissement(){}
 
     public int getId(){
         return this.id;
