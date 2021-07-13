@@ -11,6 +11,8 @@ import javax.sql.DataSource;
 import com.projet.fiche.InterfaceDAO;
 import com.projet.fiche.Adresse.Adresse;
 import com.projet.fiche.Adresse.AdresseDAO;
+import com.projet.fiche.FicheRenseignement.FicheRenseignement;
+import com.projet.fiche.FicheRenseignement.FicheRenseignementDAO;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -27,6 +29,10 @@ public class EtablissementDAO implements InterfaceDAO<Etablissement>{
     //@Autowired permet au Framework Spring de résoudre et injecter le service qui gère les méthodes CRUD de l'objet Adresse    
     @Autowired
     private AdresseDAO adresseDAO;
+
+    //@Autowired permet au Framework Spring de résoudre et injecter le service qui gère les méthodes CRUD de l'objet Fiche de renseignement
+    @Autowired
+    private FicheRenseignementDAO ficheDAO;
 
     //Méthode CRUD findAll() pour récupèrer tous les tuples de la table établissement dans la BD
     @Override
@@ -157,8 +163,17 @@ public class EtablissementDAO implements InterfaceDAO<Etablissement>{
             createStatement.executeUpdate();
             createStatement.close();
 
-            //On va chercher dans la BD le tuple inséré grâce à la fonction find, et on retourne l'établissement inséré
+            //Insertion de l'établissement dans la fiche de renseignement: Tout d'abord, on recherche l'id de la fiche par nom et prenom de l'etudiant
+            FicheRenseignement fiche = ficheDAO.find(etablissement.getNomEtudiant(), etablissement.getPrenomEtudiant());
+
+            //On va chercher dans la BD le tuple inséré grâce à la fonction find, pour récupèrer l'id de l'établissement crée, ainsi retourner l'établissement
             Etablissement etablissementInsere = this.findByString(String.valueOf(etablissement.getNumeroSiret()));
+
+            PreparedStatement statement2 = connection.prepareStatement("UPDATE ficheRenseignement SET idEtablissement = ? WHERE id = ?");
+            statement2.setInt(1, etablissementInsere.getId());
+            statement2.setInt(2, fiche.getIdFiche());
+            statement2.executeUpdate();
+
             return etablissementInsere;
         } catch(Exception e) {
             System.err.println(e.getMessage());

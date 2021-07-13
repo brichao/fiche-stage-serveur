@@ -10,6 +10,9 @@ public class ServiceGestion {
     private String mail;
     private String adresse;
 
+    private String nomEtudiant;
+    private String prenomEtudiant;
+
     public ServiceGestion(){}
 
     public int getId(){
@@ -58,6 +61,22 @@ public class ServiceGestion {
 
     public void setAdresse(String adresse){
         this.adresse=adresse;
+    }
+
+    public String getNomEtudiant(){
+        return this.nomEtudiant;
+    }
+
+    public void setNomEtudiant(String nomEtudiant){
+        this.nomEtudiant=nomEtudiant;
+    }
+
+    public String getPrenomEtudiant(){
+        return this.prenomEtudiant;
+    }
+
+    public void setPrenomEtudiant(String prenomEtudiant){
+        this.prenomEtudiant=prenomEtudiant;
     }
 
     @Override

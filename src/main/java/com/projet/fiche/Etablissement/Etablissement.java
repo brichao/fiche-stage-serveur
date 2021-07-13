@@ -17,6 +17,9 @@ public class Etablissement {
     private int idAdresse;
     private Adresse adresse = new Adresse();
     private String serviceAccueil;
+    
+    private String nomEtudiant;
+    private String prenomEtudiant;
 
     public Etablissement(){}
 
@@ -106,6 +109,22 @@ public class Etablissement {
 
     public void setAdresse(Adresse adresse){
         this.adresse=adresse;
+    }
+
+    public String getNomEtudiant(){
+        return this.nomEtudiant;
+    }
+
+    public void setNomEtudiant(String nomEtudiant){
+        this.nomEtudiant=nomEtudiant;
+    }
+
+    public String getPrenomEtudiant(){
+        return this.prenomEtudiant;
+    }
+
+    public void setPrenomEtudiant(String prenomEtudiant){
+        this.prenomEtudiant=prenomEtudiant;
     }
 
     @Override

@@ -33,6 +33,9 @@ public class InfosStage {
     private String objectifs;
     private String taches;
     private String details;
+
+	private String nomEtudiant;
+    private String prenomEtudiant;
     
     public InfosStage() {}
 
@@ -188,5 +191,20 @@ public class InfosStage {
 		this.details = details;
 	}
     
+	public String getNomEtudiant(){
+        return this.nomEtudiant;
+    }
+
+    public void setNomEtudiant(String nomEtudiant){
+        this.nomEtudiant=nomEtudiant;
+    }
+
+    public String getPrenomEtudiant(){
+        return this.prenomEtudiant;
+    }
+
+    public void setPrenomEtudiant(String prenomEtudiant){
+        this.prenomEtudiant=prenomEtudiant;
+    }
     
 }

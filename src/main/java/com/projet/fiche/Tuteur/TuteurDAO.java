@@ -9,6 +9,8 @@ import java.util.ArrayList;
 import javax.sql.DataSource;
 
 import com.projet.fiche.InterfaceDAO;
+import com.projet.fiche.FicheRenseignement.FicheRenseignement;
+import com.projet.fiche.FicheRenseignement.FicheRenseignementDAO;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,6 +23,10 @@ public class TuteurDAO implements InterfaceDAO<Tuteur>{
     //@Autowired permet au Framework Spring de résoudre et injecter le Bean qui gère la connexion à la base de donnée    
     @Autowired
     private DataSource dataSource;
+
+    //@Autowired permet au Framework Spring de résoudre et injecter le service qui gère les méthodes CRUD de l'objet Fiche de renseignement
+    @Autowired
+    private FicheRenseignementDAO ficheDAO;
 
     //Méthode CRUD findAll() pour récupèrer tous les tuples de la table Tuteur dans la BD
     @Override
@@ -114,8 +120,17 @@ public class TuteurDAO implements InterfaceDAO<Tuteur>{
             createStatement.executeUpdate();
             createStatement.close();
 
-            //On va chercher dans la BD le tuple inséré grâce à la fonction find, et on retourne le tuteur inséré
+            //Insertion de l'établissement dans la fiche de renseignement: Tout d'abord, on recherche l'id de la fiche par nom et prenom de l'etudiant
+            FicheRenseignement fiche = ficheDAO.find(tuteur.getNomEtudiant(), tuteur.getPrenomEtudiant());
+
+            //On va chercher dans la BD le tuple inséré grâce à la fonction find, pour récupèrer l'id du tuteur crée, ainsi retourner l'établissement
             Tuteur tuteurInsere = this.findByString(tuteur.getMail());
+
+            PreparedStatement statement2 = connection.prepareStatement("UPDATE ficheRenseignement SET idTuteur = ? WHERE id = ?");
+            statement2.setInt(1, tuteurInsere.getId());
+            statement2.setInt(2, fiche.getIdFiche());
+            statement2.executeUpdate();
+
             return tuteurInsere;
         } catch(Exception e) {
             System.err.println(e.getMessage());

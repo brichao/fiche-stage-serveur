@@ -13,6 +13,9 @@ public class Tuteur {
     private String adresse;
     private String disponibilite;
 
+    private String nomEtudiant;
+    private String prenomEtudiant;
+
     public Tuteur(){}
 
      public int getId(){
@@ -85,5 +88,21 @@ public class Tuteur {
 
     public void setDisponibilite(String disponibilite){
         this.disponibilite= disponibilite;
+    }
+
+    public String getNomEtudiant(){
+        return this.nomEtudiant;
+    }
+
+    public void setNomEtudiant(String nomEtudiant){
+        this.nomEtudiant=nomEtudiant;
+    }
+
+    public String getPrenomEtudiant(){
+        return this.prenomEtudiant;
+    }
+
+    public void setPrenomEtudiant(String prenomEtudiant){
+        this.prenomEtudiant=prenomEtudiant;
     }
 }

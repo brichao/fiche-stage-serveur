@@ -9,6 +9,8 @@ import java.util.ArrayList;
 import javax.sql.DataSource;
 
 import com.projet.fiche.InterfaceDAO;
+import com.projet.fiche.FicheRenseignement.FicheRenseignement;
+import com.projet.fiche.FicheRenseignement.FicheRenseignementDAO;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,6 +23,10 @@ public class ServiceGestionDAO implements InterfaceDAO<ServiceGestion>{
     //@Autowired permet au Framework Spring de résoudre et injecter le Bean qui gère la connexion à la base de donnée
     @Autowired
     private DataSource dataSource;
+
+    //@Autowired permet au Framework Spring de résoudre et injecter le service qui gère les méthodes CRUD de l'objet Fiche de renseignement
+    @Autowired
+    private FicheRenseignementDAO ficheDAO;
 
     //Méthode CRUD findAll() pour récupèrer tous les tuples de la table service de gestion dans la BD
     @Override
@@ -105,8 +111,17 @@ public class ServiceGestionDAO implements InterfaceDAO<ServiceGestion>{
             createStatement.executeUpdate();
             createStatement.close();
 
-            //On va chercher dans la BD le tuple inséré grâce à la fonction find, et on retourne le service de gestion inséré
+            //Insertion de l'établissement dans la fiche de renseignement: Tout d'abord, on recherche l'id de la fiche par nom et prenom de l'etudiant
+            FicheRenseignement fiche = ficheDAO.find(service.getNomEtudiant(), service.getPrenomEtudiant());
+
+            //On va chercher dans la BD le tuple inséré grâce à la fonction find, pour récupèrer l'id du service de gestion crée, ainsi retourner l'établissement
             ServiceGestion serviceInsere = this.findByString(service.getMail());
+
+            PreparedStatement statement2 = connection.prepareStatement("UPDATE ficheRenseignement SET idServiceGestion = ? WHERE id = ?");
+            statement2.setInt(1, serviceInsere.getId());
+            statement2.setInt(2, fiche.getIdFiche());
+            statement2.executeUpdate();
+
             return serviceInsere;
         } catch(Exception e) {
             System.err.println(e.getMessage());
