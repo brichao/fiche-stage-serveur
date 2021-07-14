@@ -31,9 +31,9 @@ public class EnvoieMail {
             System.out.println("Mail tuteur :" + mailInfos.getMailTuteur());
             System.out.println("Message refus :" + mailInfos.getMessageRefus());
             refus.setTo(mailInfos.getMailEtudiant(), mailInfos.getMailTuteur());
-            refus.setSubject("[L3 MIAGE] [Stage] Refus de la fiche de renseignement - Demande de modification");
-            refus.setText("Bonjour,\n Votre fiche de renseignement a été refusée pour la cause suivante : " + mailInfos.getMessageRefus() + "\n "
-            + "Veuillez appliquer les modifications nécessaires et re-valider la fiche de renseignement.\nCordialement,\nVotre responsable de stage.");
+            refus.setSubject("[L3 MIAGE] [Stage] Refus de la fiche de renseignements - Demande de modification");
+            refus.setText("Bonjour,\n\nVotre fiche de renseignements a été refusée pour la cause suivante : " + mailInfos.getMessageRefus() + "\n\n"
+            + "Veuillez appliquer les modifications nécessaires et re-valider la fiche de renseignements.\n\nCordialement,\n\nVotre responsable de stage.");
     
             javaMailSender.send(refus);
     
@@ -53,7 +53,7 @@ public class EnvoieMail {
             SimpleMailMessage refus = new SimpleMailMessage();
             refus.setTo(mailInfos.getMailEtudiant());
             refus.setSubject("[L3 MIAGE] [Stage] Fiche de renseignement validée");
-            refus.setText("Bonjour,\n\nVotre fiche de renseignement a été validée par votre enseignant référent du stage.\n\nCordialement,\n\nVotre responsable de stage - UGA.");
+            refus.setText("Bonjour,\n\nVotre fiche de renseignements a été validée par votre enseignant référent du stage.\n\nCordialement,\n\nVotre responsable de stage - UGA.");
     
             javaMailSender.send(refus);
     
