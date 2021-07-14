@@ -45,7 +45,7 @@ public class FicheRenseignementController {
         try{
             FicheRenseignement fiche = new FicheRenseignement();
             fiche = ficheService.find(nom, prenom);
-
+            
             //Erreur 404 si l'étudiant n'existe pas dans la BD
             if(fiche.getIdEtudiant() == 0){
                 System.out.println("L'etudiant n'existe pas !");

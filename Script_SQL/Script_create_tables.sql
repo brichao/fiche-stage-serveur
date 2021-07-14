@@ -12,7 +12,7 @@ create table Etudiants(
 	prenom varchar(30),
 	numEtudiant int,
 	numPortable int,
-	mail varchar(40),
+	mail varchar(200),
 	adresse varchar(200),
 	typeAffiliation varchar(40),
 	caisseAssurance varchar(40)
@@ -77,10 +77,10 @@ create table infosStages(
 	avantages varchar(50),
 	confidentialite boolean,
 	titre varchar(100),
-	description varchar(1500),
-	objectifs varchar(1500),
-	taches varchar(1500),
-	details varchar(1500)
+	description varchar(5000),
+	objectifs varchar(5000),
+	taches varchar(5000),
+	details varchar(5000)
 );
 
 create table ficheRenseignement(

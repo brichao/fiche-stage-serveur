@@ -8,8 +8,16 @@ import java.util.ArrayList;
 
 import javax.sql.DataSource;
 
+import com.projet.fiche.Etablissement.Etablissement;
+import com.projet.fiche.Etablissement.EtablissementDAO;
 import com.projet.fiche.Etudiant.Etudiant;
 import com.projet.fiche.Etudiant.EtudiantDAO;
+import com.projet.fiche.InfosStage.InfosStage;
+import com.projet.fiche.InfosStage.InfosStageDAO;
+import com.projet.fiche.ServiceGestion.ServiceGestion;
+import com.projet.fiche.ServiceGestion.ServiceGestionDAO;
+import com.projet.fiche.Tuteur.Tuteur;
+import com.projet.fiche.Tuteur.TuteurDAO;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -27,12 +35,27 @@ public class FicheRenseignementDAO {
     @Autowired
     private EtudiantDAO etudiantService;
 
+    //@Autowired permet au Framework Spring de résoudre et injecter le service qui gère les méthodes CRUD de l'objet établissement
+    @Autowired
+    private EtablissementDAO etablissementService;
+
+    //@Autowired permet au Framework Spring de résoudre et injecter le service qui gère les méthodes CRUD de l'objet service de gestion
+    @Autowired
+    private ServiceGestionDAO gestionService;
+
+    //@Autowired permet au Framework Spring de résoudre et injecter le service qui gère les méthodes CRUD de l'objet tuteur
+    @Autowired
+    private TuteurDAO tuteurService;
+
+    //@Autowired permet au Framework Spring de résoudre et injecter le service qui gère les méthodes CRUD de l'objet informations du stage
+    @Autowired
+    private InfosStageDAO infosService;
+
     //Méthode CRUD findAll() pour récupèrer tous les tuples de la table fiches de renseignement dans la BD
     public ArrayList<FicheRenseignement> findAll() throws RuntimeException {
         //Récupèrer la connexion grâce au service dataSource
         try(Connection connection = dataSource.getConnection()){
             Statement statement = connection.createStatement();
-            Statement statementEtudiant = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
             //On créé une requête et on sélectionne tous les tuples
             ResultSet results = statement.executeQuery("SELECT * FROM ficheRenseignement");
             //Déclaration d'une liste pour stocker tous les objets étudiants
@@ -49,26 +72,33 @@ public class FicheRenseignementDAO {
                 fiche.setIdTuteur(results.getInt("idTuteur"));
                 fiche.setIdInfosStage(results.getInt("idInfosStage"));
 
-                Etudiant etudiant = new Etudiant();
-                etudiant.setId(fiche.getIdEtudiant());
-                ResultSet resultsEtudiant = statementEtudiant.executeQuery("SELECT * FROM Etudiants WHERE id = " + fiche.getIdEtudiant());
-                if(resultsEtudiant.first()){
-                    etudiant.setId(resultsEtudiant.getInt("id"));
-                    etudiant.setNom(resultsEtudiant.getString("nom"));
-                    etudiant.setPrenom(resultsEtudiant.getString("prenom"));
-                    etudiant.setNumEtudiant(resultsEtudiant.getInt("numEtudiant"));
-                    etudiant.setNumPortable(resultsEtudiant.getInt("numPortable"));
-                    etudiant.setMail(resultsEtudiant.getString("mail"));
-                    etudiant.setAdresse(resultsEtudiant.getString("adresse"));
-                    etudiant.setTypeAffiliation(resultsEtudiant.getString("typeAffiliation"));
-                    etudiant.setCaisseAssurance(resultsEtudiant.getString("caisseAssurance"));
-                }
-                
-                fiche.setEtudiant(etudiant);
+                //Avec l'id etudiant récupéré de l'objet fiche, on va récupèrer l'objet étudiant de la BD
+                Etudiant etudiantTrouver = new Etudiant();
+                etudiantTrouver = etudiantService.find(fiche.getIdEtudiant());
+                fiche.setEtudiant(etudiantTrouver);
+
+                //Avec l'id établissement récupèré de l'objet fiche, on va récupèrer l'objet établissement de la BD
+                Etablissement etablissementTrouver = new Etablissement();
+                etablissementTrouver = etablissementService.find(fiche.getIdEtablissement());
+                fiche.setEtablissement(etablissementTrouver);
+
+                //Avec l'id service de gestion récupéré de l'objet fiche, on va récupèrer l'objet service de gestion de la BD
+                ServiceGestion serviceTrouver = new ServiceGestion();
+                serviceTrouver = gestionService.find(fiche.getIdServiceGestion());
+                fiche.setServiceGestion(serviceTrouver);
+
+                //Avec l'id tuteur récupéré de l'objet fiche, on va récupèrer l'objet tuteur de la BD
+                Tuteur tuteurTrouver = new Tuteur();
+                tuteurTrouver = tuteurService.find(fiche.getIdTuteur());
+                fiche.setTuteur(tuteurTrouver);
+
+                //Avec l'id d'informations d stage récupéré de l'objet fiche, on va récupèrer l'objet informations du stage de la BD
+                InfosStage infosTrouver = new InfosStage();
+                infosTrouver = infosService.find(fiche.getIdInfosStage());
+                fiche.setInfosStage(infosTrouver);
 
                 fiches.add(fiche);
             }
-            statementEtudiant.close();
             results.close();
             statement.close();
             //Renvoie la liste des fiches
@@ -108,10 +138,30 @@ public class FicheRenseignementDAO {
                 fiche.setIdTuteur(results.getInt("idTuteur"));
                 fiche.setIdInfosStage(results.getInt("idInfosStage"));
 
+                //Avec l'id etudiant récupéré de l'objet fiche, on va récupèrer l'objet étudiant de la BD
                 Etudiant etudiantTrouver = new Etudiant();
                 etudiantTrouver = etudiantService.find(fiche.getIdEtudiant());
-                
                 fiche.setEtudiant(etudiantTrouver);
+
+                //Avec l'id établissement récupèré de l'objet fiche, on va récupèrer l'objet établissement de la BD
+                Etablissement etablissementTrouver = new Etablissement();
+                etablissementTrouver = etablissementService.find(fiche.getIdEtablissement());
+                fiche.setEtablissement(etablissementTrouver);
+
+                //Avec l'id service de gestion récupéré de l'objet fiche, on va récupèrer l'objet service de gestion de la BD
+                ServiceGestion serviceTrouver = new ServiceGestion();
+                serviceTrouver = gestionService.find(fiche.getIdServiceGestion());
+                fiche.setServiceGestion(serviceTrouver);
+
+                //Avec l'id tuteur récupéré de l'objet fiche, on va récupèrer l'objet tuteur de la BD
+                Tuteur tuteurTrouver = new Tuteur();
+                tuteurTrouver = tuteurService.find(fiche.getIdTuteur());
+                fiche.setTuteur(tuteurTrouver);
+
+                //Avec l'id d'informations d stage récupéré de l'objet fiche, on va récupèrer l'objet informations du stage de la BD
+                InfosStage infosTrouver = new InfosStage();
+                infosTrouver = infosService.find(fiche.getIdInfosStage());
+                fiche.setInfosStage(infosTrouver);
             }    
             etudiantStatement.close();
             results.close();
