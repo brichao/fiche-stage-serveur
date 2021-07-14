@@ -1,7 +1,0 @@
-target/
-.classpath
-.project
-.env
-.settings/
-.src/main/resources/application.properties
-.gitignore
