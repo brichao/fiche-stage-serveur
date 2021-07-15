@@ -8,18 +8,11 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 //toString() pour le bon affichage d'un objet d'informations de stage
 public class InfosStage {
     private int id;
-	//Déclaration du format de la date pour respecter le type de date dans PostGreSQL
-	@JsonFormat(pattern = "dd-MM-yyyy")
     private Date dateDebutPartiel;
-	@JsonFormat(pattern = "dd-MM-yyyy")
     private Date dateFinPartiel;
-	@JsonFormat(pattern = "dd-MM-yyyy")
     private Date dateDebutPlein;
-	@JsonFormat(pattern = "dd-MM-yyyy")
     private Date dateFinPlein;
-	@JsonFormat(pattern = "dd-MM-yyyy")
     private Date dateDebutInterruption;
-	@JsonFormat(pattern = "dd-MM-yyyy")
     private Date dateFinInterruption;
     private double nbHeures;
     private boolean gratification;
