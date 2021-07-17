@@ -27,6 +27,8 @@ public class ConnexionBD {
         } else {
             HikariConfig config = new HikariConfig();
             config.setJdbcUrl(dbUrl);
+            config.setUsername("jcuefylwpjunph");
+            config.setPassword("3f25e5139b8a0e863758c0ce3d05963a9f4af21425cd3b6846200f81bf68f2f8");
             config.setMaximumPoolSize(3);
             return new HikariDataSource(config);
         }
