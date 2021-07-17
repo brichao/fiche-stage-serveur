@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 public class ConnexionBD {
 
     //Récupérer l'url de la database du fichier .env
-    @Value("${spring.datasource.url}")
+    @Value("${spring.datasource.jdbc-url}")
     private String dbUrl;
 
     //Mise en place d'une connexion à la BD
