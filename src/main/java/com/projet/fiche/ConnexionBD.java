@@ -22,7 +22,6 @@ public class ConnexionBD {
     @Bean
     @Primary
     public DataSource dataSource() throws SQLException {
-        System.out.println("L'url de la base de donnée : " + dbUrl);
         if (dbUrl == null || dbUrl.isEmpty()) {
             return new HikariDataSource();
         } else {
