@@ -16,10 +16,13 @@ public class ConnexionBD {
     @Value("${spring.datasource.jdbcUrl}")
     private String dbUrl;
 
+    
+
     //Mise en place d'une connexion à la BD
     @Bean
     @Primary
     public DataSource dataSource() throws SQLException {
+        System.out.println("L'url de la base de donnée : " + dbUrl);
         if (dbUrl == null || dbUrl.isEmpty()) {
             return new HikariDataSource();
         } else {
