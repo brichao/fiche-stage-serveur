@@ -15,7 +15,10 @@ public class ConnexionBD {
     //Récupérer l'url de la database du fichier .env
     @Value("${spring.datasource.jdbc-url}")
     private String dbUrl;
-
+    @Value("${spring.datasource.username}")
+    private String dbUsername;
+    @Value("${spring.datasource.password}")
+    private String dbPassword;
     
 
     //Mise en place d'une connexion à la BD
@@ -27,8 +30,8 @@ public class ConnexionBD {
         } else {
             HikariConfig config = new HikariConfig();
             config.setJdbcUrl(dbUrl);
-            config.setUsername("jcuefylwpjunph");
-            config.setPassword("3f25e5139b8a0e863758c0ce3d05963a9f4af21425cd3b6846200f81bf68f2f8");
+            config.setUsername(dbUsername);
+            config.setPassword(dbPassword);
             config.setMaximumPoolSize(3);
             return new HikariDataSource(config);
         }
