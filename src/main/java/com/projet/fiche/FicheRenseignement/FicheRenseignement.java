@@ -1,5 +1,7 @@
 package com.projet.fiche.FicheRenseignement;
 
+import java.sql.Date;
+
 import com.projet.fiche.Etablissement.Etablissement;
 import com.projet.fiche.Etudiant.Etudiant;
 import com.projet.fiche.InfosStage.InfosStage;
@@ -14,6 +16,8 @@ public class FicheRenseignement {
     private int idServiceGestion;
     private int idTuteur;
     private int idInfosStage;
+
+    private Date dateDeCreation;
 
     private Etudiant etudiant = new Etudiant();
     private Etablissement etablissement = new Etablissement();
@@ -109,5 +113,13 @@ public class FicheRenseignement {
 
     public void setInfosStage(InfosStage infosStage){
         this.infosStage=infosStage;
+    }
+
+    public Date getDateCreation(){
+        return this.dateDeCreation;
+    }
+
+    public void setDateCreation(Date dateDeCreation){
+        this.dateDeCreation=dateDeCreation;
     }
 }
