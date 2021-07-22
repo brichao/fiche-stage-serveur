@@ -120,9 +120,11 @@ public class EtudiantDAO implements InterfaceDAO<Etudiant>{
 
             //Creation d'une fiche de renseignement et insertion de l'étudiant crée dedans
             createStatementFiche.setInt(1, etudiantInsere.getId());
-            createStatementFiche.setDate(2, etudiantInsere.getDateCreation());
+            createStatementFiche.setDate(2, etudiant.getDateCreation());
             createStatementFiche.executeUpdate();
             createStatementFiche.close();
+
+            etudiantInsere.setDateCreation(etudiant.getDateCreation());
 
             return etudiantInsere;
         } catch(Exception e) {
