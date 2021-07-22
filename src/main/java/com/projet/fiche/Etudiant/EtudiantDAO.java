@@ -113,6 +113,7 @@ public class EtudiantDAO implements InterfaceDAO<Etudiant>{
             createStatement.executeUpdate();
             createStatement.close();
 
+            System.out.println("Date de creation DAO : " + etudiant.getDateDeCreation());
             PreparedStatement createStatementFiche = connection.prepareStatement("INSERT INTO ficheRenseignement(idEtudiant, dateDeCreation) VALUES (?,?)");
 
             //On va chercher dans la BD le tuple inséré grâce à la fonction find, et on retourne l'étudiant inséré
@@ -120,11 +121,11 @@ public class EtudiantDAO implements InterfaceDAO<Etudiant>{
 
             //Creation d'une fiche de renseignement et insertion de l'étudiant crée dedans
             createStatementFiche.setInt(1, etudiantInsere.getId());
-            createStatementFiche.setDate(2, etudiant.getDateCreation());
+            createStatementFiche.setDate(2, etudiant.getDateDeCreation());
             createStatementFiche.executeUpdate();
             createStatementFiche.close();
 
-            etudiantInsere.setDateCreation(etudiant.getDateCreation());
+            etudiantInsere.setDateDeCreation(etudiant.getDateDeCreation());
 
             return etudiantInsere;
         } catch(Exception e) {

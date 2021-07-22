@@ -91,11 +91,11 @@ public class Etudiant {
         this.adresse=adresse;
     }
 
-    public Date getDateCreation(){
+    public Date getDateDeCreation(){
         return this.dateDeCreation;
     }
 
-    public void setDateCreation(Date dateDeCreation){
+    public void setDateDeCreation(Date dateDeCreation){
         this.dateDeCreation=dateDeCreation;
     }
 }
