@@ -140,7 +140,7 @@ public class InfosStageDAO implements InterfaceDAO<InfosStage>{
             createStatement.setString(11, stageObject.getLaboratoireUGA()); 
             createStatement.setString(12, stageObject.getAvantages()); 
             createStatement.setBoolean(13, stageObject.isConfidentialite()); 
-            createStatement.setString(14, stageObject.getTitre()); 
+            createStatement.setString(14, stageObject.getTitre().toUpperCase()); 
             createStatement.setString(15, stageObject.getDescription()); 
             createStatement.setString(16, stageObject.getObjectifs());
             createStatement.setString(17, stageObject.getTaches());  
@@ -190,7 +190,7 @@ public class InfosStageDAO implements InterfaceDAO<InfosStage>{
             updateStatement.setString(11, stageObject.getLaboratoireUGA()); 
             updateStatement.setString(12, stageObject.getAvantages()); 
             updateStatement.setBoolean(13, stageObject.isConfidentialite()); 
-            updateStatement.setString(14, stageObject.getTitre()); 
+            updateStatement.setString(14, stageObject.getTitre().toUpperCase()); 
             updateStatement.setString(15, stageObject.getDescription()); 
             updateStatement.setString(16, stageObject.getObjectifs());
             updateStatement.setString(17, stageObject.getTaches());  

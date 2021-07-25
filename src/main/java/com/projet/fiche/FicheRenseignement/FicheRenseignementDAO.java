@@ -115,8 +115,8 @@ public class FicheRenseignementDAO {
         try(Connection connection = dataSource.getConnection()){
             //Tout d'abord, on va chercher dans la table Etudiants si l'etudiant (nom et prenom) existe dans la BD
             PreparedStatement etudiantStatement = connection.prepareStatement("SELECT * FROM Etudiants where nom = ? AND prenom = ?");
-            etudiantStatement.setString(1, nom);
-            etudiantStatement.setString(2, prenom);
+            etudiantStatement.setString(1, nom.toUpperCase());
+            etudiantStatement.setString(2, prenom.toUpperCase());
             ResultSet resultatEtudiant = etudiantStatement.executeQuery();
             Etudiant etudiant = new Etudiant();
             while(resultatEtudiant.next()){
@@ -181,8 +181,8 @@ public class FicheRenseignementDAO {
 
             //Tout d'abord, on va chercher dans la table Etudiants si l'etudiant (nom et prenom) existe dans la BD
             PreparedStatement etudiantStatement = connection.prepareStatement("SELECT * FROM Etudiants where nom = ? AND prenom = ?");
-            etudiantStatement.setString(1, nom);
-            etudiantStatement.setString(2, prenom);
+            etudiantStatement.setString(1, nom.toUpperCase());
+            etudiantStatement.setString(2, prenom.toUpperCase());
             ResultSet resultatEtudiant = etudiantStatement.executeQuery();
             Etudiant etudiant = new Etudiant();
             while(resultatEtudiant.next()){

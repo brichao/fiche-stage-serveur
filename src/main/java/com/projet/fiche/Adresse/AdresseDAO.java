@@ -93,7 +93,7 @@ public class AdresseDAO{
             createStatement.setString(1, adresse.getAdresse()); 
             createStatement.setInt(2, adresse.getCodePostal()); 
             createStatement.setString(3, adresse.getVille()); 
-            createStatement.setString(4, adresse.getPays());  
+            createStatement.setString(4, adresse.getPays().toUpperCase());  
 
             createStatement.executeUpdate();
             createStatement.close();
@@ -119,7 +119,7 @@ public class AdresseDAO{
             updateStatement.setString(1, adresse.getAdresse());
             updateStatement.setInt(2, adresse.getCodePostal()); 
             updateStatement.setString(3, adresse.getVille()); 
-            updateStatement.setString(4, adresse.getPays());
+            updateStatement.setString(4, adresse.getPays().toUpperCase());
             updateStatement.setInt(5, adresse.getId());
             
             updateStatement.executeUpdate();

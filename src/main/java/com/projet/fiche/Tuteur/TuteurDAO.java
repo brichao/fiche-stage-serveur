@@ -108,8 +108,8 @@ public class TuteurDAO implements InterfaceDAO<Tuteur>{
             + "disponibilite) VALUES(?,?,?,?,?,?,?,?)"); 
 
             //Définition des champs requis pour la requête d'insertion, et execution ensuite grâce à la fonction executeUpdate()
-            createStatement.setString(1, tuteur.getNom()); 
-            createStatement.setString(2, tuteur.getPrenom());
+            createStatement.setString(1, tuteur.getNom().toUpperCase()); 
+            createStatement.setString(2, tuteur.getPrenom().toUpperCase());
             createStatement.setString(3, tuteur.getFonction()); 
             createStatement.setString(4, tuteur.getService());  
             createStatement.setInt(5, tuteur.getNumTelephone()); 
@@ -146,8 +146,8 @@ public class TuteurDAO implements InterfaceDAO<Tuteur>{
             PreparedStatement updateStatement = connection.prepareStatement("UPDATE Tuteurs SET nom = ?, prenom = ?, fonction = ?, service = ?,"
             + " numTelephone = ?, mail = ?, adresse = ?, disponibilite = ? where id = ?");
 
-            updateStatement.setString(1, tuteur.getNom()); 
-            updateStatement.setString(2, tuteur.getPrenom());
+            updateStatement.setString(1, tuteur.getNom().toUpperCase()); 
+            updateStatement.setString(2, tuteur.getPrenom().toUpperCase());
             updateStatement.setString(3, tuteur.getFonction()); 
             updateStatement.setString(4, tuteur.getService());  
             updateStatement.setInt(5, tuteur.getNumTelephone()); 

@@ -102,8 +102,8 @@ public class ServiceGestionDAO implements InterfaceDAO<ServiceGestion>{
             + " VALUES(?,?,?,?,?)");
 
             //Définition des champs requis pour la requête d'insertion, et execution ensuite grâce à la fonction executeUpdate()
-            createStatement.setString(1, service.getNom()); 
-            createStatement.setString(2, service.getPrenom()); 
+            createStatement.setString(1, service.getNom().toUpperCase()); 
+            createStatement.setString(2, service.getPrenom().toUpperCase()); 
             createStatement.setInt(3, service.getNumeroTel()); 
             createStatement.setString(4, service.getMail());  
             createStatement.setString(5, service.getAdresse());
@@ -138,8 +138,8 @@ public class ServiceGestionDAO implements InterfaceDAO<ServiceGestion>{
             " where id = ?");
 
             
-            updateStatement.setString(1, service.getNom()); 
-            updateStatement.setString(2, service.getPrenom()); 
+            updateStatement.setString(1, service.getNom().toUpperCase()); 
+            updateStatement.setString(2, service.getPrenom().toUpperCase()); 
             updateStatement.setInt(3, service.getNumeroTel()); 
             updateStatement.setString(4, service.getMail());  
             updateStatement.setString(5, service.getAdresse());

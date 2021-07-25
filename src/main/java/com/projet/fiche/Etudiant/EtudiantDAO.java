@@ -101,8 +101,8 @@ public class EtudiantDAO implements InterfaceDAO<Etudiant>{
             + "mail,adresse,typeAffiliation,caisseAssurance) VALUES(?,?,?,?,?,?,?,?)");
 
             //Définition des champs requis pour la requête d'insertion, et execution ensuite grâce à la fonction executeUpdate()
-            createStatement.setString(1, etudiant.getNom()); 
-            createStatement.setString(2, etudiant.getPrenom()); 
+            createStatement.setString(1, etudiant.getNom().toUpperCase()); 
+            createStatement.setString(2, etudiant.getPrenom().toUpperCase()); 
             createStatement.setInt(3, etudiant.getNumEtudiant()); 
             createStatement.setInt(4, etudiant.getNumPortable()); 
             createStatement.setString(5, etudiant.getMail()); 
@@ -141,8 +141,8 @@ public class EtudiantDAO implements InterfaceDAO<Etudiant>{
             PreparedStatement updateStatement = connection.prepareStatement("UPDATE Etudiants SET nom = ?, prenom = ?, numEtudiant = ?," +
             "numPortable = ?, mail = ?, adresse = ?, typeAffiliation = ?, caisseAssurance = ? where id = ?");
 
-            updateStatement.setString(1, etudiant.getNom()); 
-            updateStatement.setString(2, etudiant.getPrenom()); 
+            updateStatement.setString(1, etudiant.getNom().toUpperCase()); 
+            updateStatement.setString(2, etudiant.getPrenom().toUpperCase()); 
             updateStatement.setInt(3, etudiant.getNumEtudiant()); 
             updateStatement.setInt(4, etudiant.getNumPortable()); 
             updateStatement.setString(5, etudiant.getMail()); 
