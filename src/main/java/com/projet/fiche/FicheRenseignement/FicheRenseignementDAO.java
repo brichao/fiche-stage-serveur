@@ -183,8 +183,7 @@ public class FicheRenseignementDAO {
         try(Connection connection = dataSource.getConnection()){
             PreparedStatement updateStatement = connection.prepareStatement("UPDATE ficheRenseignement SET ficheValidee = ? where id = ?");
             updateStatement.setInt(1, fiche.getFicheValidee());
-            updateStatement.setInt(1, fiche.getIdFiche());
-            System.out.println("Id de la fiche à modifier : " + fiche.getIdFiche());
+            updateStatement.setInt(2, fiche.getIdFiche());
             updateStatement.executeUpdate();
             updateStatement.close();
 
