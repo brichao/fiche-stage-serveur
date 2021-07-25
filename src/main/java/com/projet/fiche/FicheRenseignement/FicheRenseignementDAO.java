@@ -181,17 +181,15 @@ public class FicheRenseignementDAO {
     //Méthode CRUD update() pour modifier une fiche par le nom et prénom de l'étudiant de la BD
     public FicheRenseignement update(FicheRenseignement fiche) throws RuntimeException{
         try(Connection connection = dataSource.getConnection()){
-            PreparedStatement updateStatement = connection.prepareStatement("UPDATE ficheRenseignement SET ficheValidee = ?");
+            PreparedStatement updateStatement = connection.prepareStatement("UPDATE ficheRenseignement SET ficheValidee = ? where id = ?");
             updateStatement.setInt(1, fiche.getFicheValidee());
+            updateStatement.setInt(1, fiche.getIdFiche());
             updateStatement.executeUpdate();
             updateStatement.close();
 
-            System.out.println("id Fiche de renseignements reçus : " + fiche.getIdFiche() + ", validation :" +fiche.getFicheValidee());
             FicheRenseignement ficheModifiee = new FicheRenseignement();
             ficheModifiee = this.find(fiche.getEtudiant().getNom(), fiche.getEtudiant().getPrenom());
-            System.out.println("fiche de renseignement après modif : " + ficheModifiee.getIdFiche() + ", validation : " + ficheModifiee.getFicheValidee());
             return ficheModifiee;
-
         } catch (Exception e){
             System.err.println(e.getMessage());
             return null;
