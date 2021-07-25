@@ -7,6 +7,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 
 import javax.sql.DataSource;
+import javax.swing.tree.ExpandVetoException;
 
 import com.projet.fiche.Etablissement.Etablissement;
 import com.projet.fiche.Etablissement.EtablissementDAO;
@@ -169,6 +170,24 @@ public class FicheRenseignementDAO {
             results.close();
             statement.close();
             return fiche;
+        } catch (Exception e){
+            System.err.println(e.getMessage());
+            return null;
+        }
+    }
+
+    //Méthode CRUD update() pour modifier une fiche par le nom et prénom de l'étudiant de la BD
+    public FicheRenseignement update(FicheRenseignement fiche) throws RuntimeException{
+        try(Connection connection = dataSource.getConnection()){
+            PreparedStatement updateStatement = connection.prepareStatement("UPDATE ficheRenseignement SET ficheValidee = ?");
+            updateStatement.setInt(1, fiche.getFicheValidee());
+            updateStatement.executeUpdate();
+            updateStatement.close();
+
+            FicheRenseignement ficheModifiee = new FicheRenseignement();
+            ficheModifiee = this.find(fiche.getEtudiant().getNom(), fiche.getEtudiant().getPrenom());
+            return ficheModifiee;
+            
         } catch (Exception e){
             System.err.println(e.getMessage());
             return null;

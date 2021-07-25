@@ -16,8 +16,8 @@ public class FicheRenseignement {
     private int idServiceGestion;
     private int idTuteur;
     private int idInfosStage;
-
     private Date dateDeCreation;
+    private int ficheValidee;
 
     private Etudiant etudiant = new Etudiant();
     private Etablissement etablissement = new Etablissement();
@@ -121,5 +121,13 @@ public class FicheRenseignement {
 
     public void setDateDeCreation(Date dateDeCreation){
         this.dateDeCreation=dateDeCreation;
+    }
+
+    public int getFicheValidee(){
+        return this.ficheValidee;
+    }
+
+    public void setFicheValidee(int ficheValidee){
+        this.ficheValidee=ficheValidee;
     }
 }

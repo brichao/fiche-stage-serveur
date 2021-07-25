@@ -91,6 +91,7 @@ create table ficheRenseignement(
 	idTuteur int,
 	idInfosStage int,
 	dateDeCreation Date,
+	ficheValidee int,
 	constraint idEtudiant_fk foreign key(idEtudiant) references Etudiants(id),
 	constraint idEtablissement_fk foreign key(idEtablissement) references Etablissements(id),
 	constraint idServiceGestion_fk foreign key(idServiceGestion) references ServicesGestion(id),

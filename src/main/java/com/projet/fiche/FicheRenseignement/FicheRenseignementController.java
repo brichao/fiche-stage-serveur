@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -38,7 +40,7 @@ public class FicheRenseignementController {
         }
     }
 
-    //Ressource HTTP préfixé par /fiches/nom prenom et dont la fonction est de récupérer une fiche par le nom et prenom de l'étudiant
+    //Ressource HTTP préfixé par /fiches/nom/prenom et dont la fonction est de récupérer une fiche par le nom et prenom de l'étudiant
     //retourne une response de type HTTP
     @GetMapping("/{nomEtudiant}/{prenomEtudiant}")
     public FicheRenseignement find(@PathVariable(value="nomEtudiant") String nom, @PathVariable(value="prenomEtudiant") String prenom, 
@@ -61,10 +63,41 @@ public class FicheRenseignementController {
             return null;
         }
     }
+
+    //Ressource HTTP préfixé par /fiches/nom/prenom et dont la fonction est de modifier une fiche par le nom et prenom de l'étudiant
+    //retourne une response de type HTTP
+    @PutMapping("/{nomEtudiant}/{prenomEtudiant")
+    public FicheRenseignement update(@PathVariable(value="nomEtudiant") String nomEtudiant, @PathVariable(value="prenomEtudiant") String prenomEtudiant,
+     @RequestBody FicheRenseignement fiche, HttpServletResponse response){
+        try{
+            FicheRenseignement ficheExiste = new FicheRenseignement();
+            ficheExiste = ficheService.find(nomEtudiant, prenomEtudiant);
+
+            //Erreur 403 si la fiche n'existe pas (=> Etudiant n'existe pas)
+            if(ficheExiste.getIdFiche() == 0){
+                response.setStatus(403);
+                System.out.println("La fiche de renseignements n'existe pas dans la BD");
+                return null;
+            } else {
+                FicheRenseignement ficheModifiee = new FicheRenseignement();
+                fiche.setIdFiche(ficheExiste.getIdFiche());
+                ficheModifiee = ficheService.update(fiche);
+                return ficheModifiee;
+            }
+
+        } catch (Exception e){
+            response.setStatus(500);
+            System.err.println(e.getMessage());
+            return null;
+        }
+    }
     
+    //Ressource HTTP préfixé par /fiches/nom/prenom et dont la fonction est de supprimer une fiche par le nom et prenom de l'étudiant
+    //retourne une response de type HTTP
     @DeleteMapping("/{nomEtudiant}/{prenomEtudiant}")
     public void delete(@PathVariable(value="nomEtudiant") String nom, @PathVariable(value="prenomEtudiant") String prenom, HttpServletResponse response){
         try{
+            //Erreur 404 si l'étudiant n'existe pas dans la BD
             if(ficheService.find(nom, prenom).getIdEtudiant() == 0){
                 System.out.println("L'étudiant n'existe pas !");
                 response.setStatus(404);
