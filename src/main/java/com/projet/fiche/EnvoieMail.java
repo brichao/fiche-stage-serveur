@@ -27,9 +27,6 @@ public class EnvoieMail {
     public EmailData sendEmail(@RequestBody EmailData mailInfos, HttpServletResponse response){
         try{
             SimpleMailMessage refus = new SimpleMailMessage();
-            System.out.println("Mail etudiant :" + mailInfos.getMailEtudiant());
-            System.out.println("Mail tuteur :" + mailInfos.getMailTuteur());
-            System.out.println("Message refus :" + mailInfos.getMessageRefus());
             refus.setTo(mailInfos.getMailEtudiant(), mailInfos.getMailTuteur());
             refus.setSubject("[L3 MIAGE] [Stage] Refus de la fiche de renseignements - Demande de modification");
             refus.setText("Bonjour,\n\nVotre fiche de renseignements a été refusée pour la cause suivante : " + mailInfos.getMessageRefus() + "\n\n"
