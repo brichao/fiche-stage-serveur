@@ -203,6 +203,9 @@ public class FicheRenseignementDAO {
                 fiche.setIdTuteur(results.getInt("idTuteur"));
                 fiche.setIdInfosStage(results.getInt("idInfosStage"));
                 fiche.setDateDeCreation(results.getDate("dateDeCreation"));
+
+                Statement suppression = connection.createStatement();
+                suppression.executeUpdate("DELETE FROM ficheRenseignement WHERE id = " + fiche.getIdFiche());
             
                 //Avec l'id etudiant récupéré de l'objet fiche, on va supprimer l'objet étudiant de la BD
                 etudiantService.delete(fiche.getIdEtudiant());
