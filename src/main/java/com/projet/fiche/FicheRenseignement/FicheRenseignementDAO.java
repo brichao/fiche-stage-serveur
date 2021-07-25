@@ -174,4 +174,60 @@ public class FicheRenseignementDAO {
             return null;
         }
     }
+
+    //Méthode CRUD delete() pour supprimer une fiche par le nom et prénom de l'étudiant de la BD
+    public void delete(String nom, String prenom) throws RuntimeException{
+        try(Connection connection = dataSource.getConnection()){
+
+            //Tout d'abord, on va chercher dans la table Etudiants si l'etudiant (nom et prenom) existe dans la BD
+            PreparedStatement etudiantStatement = connection.prepareStatement("SELECT * FROM Etudiants where nom = ? AND prenom = ?");
+            etudiantStatement.setString(1, nom);
+            etudiantStatement.setString(2, prenom);
+            ResultSet resultatEtudiant = etudiantStatement.executeQuery();
+            Etudiant etudiant = new Etudiant();
+            while(resultatEtudiant.next()){
+                etudiant.setId(resultatEtudiant.getInt("id"));
+            }
+
+            //Après avoir cherché l'étudiant, on récupère l'id de l'étudiant, et on cherchera dans la table ficheRenseignement si cet id est présent
+            PreparedStatement statement = connection.prepareStatement("SELECT * FROM ficheRenseignement where idEtudiant = ?");
+            statement.setInt(1, etudiant.getId());
+            ResultSet results = statement.executeQuery();
+            
+            FicheRenseignement fiche = new FicheRenseignement();
+            while(results.next()){
+                fiche.setIdFiche(results.getInt("id"));
+                fiche.setIdEtudiant(results.getInt("idEtudiant"));
+                fiche.setIdEtablissement(results.getInt("idEtablissement"));
+                fiche.setIdServiceGestion(results.getInt("idServiceGestion"));
+                fiche.setIdTuteur(results.getInt("idTuteur"));
+                fiche.setIdInfosStage(results.getInt("idInfosStage"));
+                fiche.setDateDeCreation(results.getDate("dateDeCreation"));
+            
+                //Avec l'id etudiant récupéré de l'objet fiche, on va supprimer l'objet étudiant de la BD
+                etudiantService.delete(fiche.getIdEtudiant());
+
+                //Avec l'id établissement récupèré de l'objet fiche, on va supprimer l'objet établissement de la BD
+                etablissementService.delete(fiche.getIdEtablissement());
+
+                //Avec l'id service de gestion récupéré de l'objet fiche, on va supprimer l'objet service de gestion de la BD
+                gestionService.delete(fiche.getIdServiceGestion());
+
+                //Avec l'id tuteur récupéré de l'objet fiche, on va supprimer l'objet tuteur de la BD
+                tuteurService.delete(fiche.getIdTuteur());
+
+                //Avec l'id d'informations d stage récupéré de l'objet fiche, on va supprimer l'objet informations du stage de la BD
+                infosService.delete(fiche.getIdInfosStage());
+            }    
+            Statement suppression = connection.createStatement();
+            suppression.executeUpdate("DELETE FROM ficheRenseignement WHERE id = " + fiche.getIdFiche());
+
+            suppression.close();
+            etudiantStatement.close();
+            results.close();
+            statement.close();
+        } catch(Exception e){
+            System.err.println(e.getMessage());
+        }
+    }
 }

@@ -6,6 +6,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -61,4 +62,18 @@ public class FicheRenseignementController {
         }
     }
     
+    @DeleteMapping("/{nomEtudiant}/{prenomEtudiant}")
+    public void delete(@PathVariable(value="nomEtudiant") String nom, @PathVariable(value="prenomEtudiant") String prenom, HttpServletResponse response){
+        try{
+            if(ficheService.find(nom, prenom).getIdEtudiant() == 0){
+                System.out.println("L'étudiant n'existe pas !");
+                response.setStatus(404);
+            } else {
+                ficheService.delete(nom, prenom);
+            }
+        } catch(Exception e){
+            response.setStatus(500);
+            System.err.println(e.getMessage());
+        }
+    }
 }
