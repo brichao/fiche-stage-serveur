@@ -66,7 +66,7 @@ public class FicheRenseignementController {
 
     //Ressource HTTP préfixé par /fiches/nom/prenom et dont la fonction est de modifier une fiche par le nom et prenom de l'étudiant
     //retourne une response de type HTTP
-    @PutMapping("/{nomEtudiant}/{prenomEtudiant")
+    @PutMapping("/{nomEtudiant}/{prenomEtudiant}")
     public FicheRenseignement update(@PathVariable(value="nomEtudiant") String nomEtudiant, @PathVariable(value="prenomEtudiant") String prenomEtudiant,
      @RequestBody FicheRenseignement fiche, HttpServletResponse response){
         try{
