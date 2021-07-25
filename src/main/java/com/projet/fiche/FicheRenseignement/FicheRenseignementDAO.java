@@ -73,6 +73,7 @@ public class FicheRenseignementDAO {
                 fiche.setIdTuteur(results.getInt("idTuteur"));
                 fiche.setIdInfosStage(results.getInt("idInfosStage"));
                 fiche.setDateDeCreation(results.getDate("dateDeCreation"));
+                fiche.setFicheValidee(results.getInt("ficheValidee"));
 
                 //Avec l'id etudiant récupéré de l'objet fiche, on va récupèrer l'objet étudiant de la BD
                 Etudiant etudiantTrouver = new Etudiant();
@@ -140,6 +141,7 @@ public class FicheRenseignementDAO {
                 fiche.setIdTuteur(results.getInt("idTuteur"));
                 fiche.setIdInfosStage(results.getInt("idInfosStage"));
                 fiche.setDateDeCreation(results.getDate("dateDeCreation"));
+                fiche.setFicheValidee(results.getInt("ficheValidee"));
 
                 //Avec l'id etudiant récupéré de l'objet fiche, on va récupèrer l'objet étudiant de la BD
                 Etudiant etudiantTrouver = new Etudiant();
