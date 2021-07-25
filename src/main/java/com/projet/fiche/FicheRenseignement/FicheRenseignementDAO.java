@@ -184,10 +184,12 @@ public class FicheRenseignementDAO {
             updateStatement.executeUpdate();
             updateStatement.close();
 
+            System.out.println("id Fiche de renseignements reçus : " + fiche.getIdFiche() + ", validation :" +fiche.getFicheValidee());
             FicheRenseignement ficheModifiee = new FicheRenseignement();
             ficheModifiee = this.find(fiche.getEtudiant().getNom(), fiche.getEtudiant().getPrenom());
+            System.out.println("fiche de renseignement après modif : " + ficheModifiee.getIdFiche() + ", validation : " + ficheModifiee.getFicheValidee());
             return ficheModifiee;
-            
+
         } catch (Exception e){
             System.err.println(e.getMessage());
             return null;
