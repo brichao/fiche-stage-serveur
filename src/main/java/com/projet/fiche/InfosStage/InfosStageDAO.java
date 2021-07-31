@@ -151,9 +151,12 @@ public class InfosStageDAO implements InterfaceDAO<InfosStage>{
 
             //Insertion de l'établissement dans la fiche de renseignement: Tout d'abord, on recherche l'id de la fiche par nom et prenom de l'etudiant
             FicheRenseignement fiche = ficheDAO.find(stageObject.getNomEtudiant(), stageObject.getPrenomEtudiant());
+            System.out.println("Nom d'étudiant : " + stageObject.getNomEtudiant() + ", et prenom : " + stageObject.getPrenomEtudiant());
 
             //On va chercher dans la BD le tuple inséré grâce à la fonction find, pour récupèrer l'id des informations de stage créées, ainsi retourner l'établissement
             InfosStage stageInsere = this.findByString(stageObject.getTitre());
+            System.out.println("Le titre du stage insere : " + stageInsere.getTitre());
+            System.out.println("L'id du stage insere : " + stageInsere.getId());
 
             PreparedStatement statement2 = connection.prepareStatement("UPDATE ficheRenseignement SET idInfosStage = ? WHERE id = ?");
             statement2.setInt(1, stageInsere.getId());

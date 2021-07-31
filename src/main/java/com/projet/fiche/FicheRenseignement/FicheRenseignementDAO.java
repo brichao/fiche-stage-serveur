@@ -7,7 +7,6 @@ import java.sql.Statement;
 import java.util.ArrayList;
 
 import javax.sql.DataSource;
-import javax.swing.tree.ExpandVetoException;
 
 import com.projet.fiche.Etablissement.Etablissement;
 import com.projet.fiche.Etablissement.EtablissementDAO;
