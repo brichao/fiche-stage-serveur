@@ -154,8 +154,6 @@ public class InfosStageDAO implements InterfaceDAO<InfosStage>{
 
             //On va chercher dans la BD le tuple inséré grâce à la fonction find, pour récupèrer l'id des informations de stage créées, ainsi retourner l'établissement
             InfosStage stageInsere = this.findByString(stageObject.getTitre().toUpperCase());
-            System.out.println("Le titre du stage insere : " + stageInsere.getTitre());
-            System.out.println("L'id du stage insere : " + stageInsere.getId());
 
             PreparedStatement statement2 = connection.prepareStatement("UPDATE ficheRenseignement SET idInfosStage = ? WHERE id = ?");
             statement2.setInt(1, stageInsere.getId());
